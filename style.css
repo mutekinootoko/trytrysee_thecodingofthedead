@@ -1,0 +1,30 @@
+body {
+  background-color: #000;
+}
+
+.container {
+  position: relative;
+  margin: 0 auto;
+  width: 90%;
+}
+
+.gameview {
+  position: absolute;
+  left: 0;
+}
+
+.question-block {
+  height: 800px;
+  width: 30%;
+  position: absolute;
+  right: 0;
+  padding: 50px;
+  box-sizing: border-box;
+  background-color: #222;
+}
+
+.question-text {
+  font-size: 20px;
+  text-align: left;
+  color: #FFF;
+}

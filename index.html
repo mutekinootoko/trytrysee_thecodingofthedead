@@ -2,15 +2,25 @@
    <head>
        <meta charset="UTF-8"/>
        <title>try try see</title>
+       <link href="style.css" rel="stylesheet">
        <script src="phaser.min.js"></script>
        <script src="jquery-2.2.0.min.js"></script>
    </head>
    <body>
-       <div id="tts"></div>
+       <div class="container">
+         <div class="gameview"id="tts"></div>
+         <div class="question-block">
+           <div class="question-text">
+             我是題目，我也是題目，還是題目。我是題目，我也是題目，還是題目。我是題目，我也是題目，還是題目。我是題目，我也是題目，還是題目。我是題目，我也是題目，還是題目。我是題目，我也是題目，還是題目。我是題目，我也是題目，還是題目。
+           </div>
+         </div>
+       </div>
 
        <script lang="javascript">
+       // var gameWidth = 1000;
+       var gameHeight = 800;
        var gameWidth = Math.floor($(document).width() * 0.7 -5 );
-       var gameHeight = Math.floor($(document).height() - 5);
+       // var gameHeight = Math.floor($(document).height() - 5);
 
         // phaserCreate the game object itself
         var game = new Phaser.Game(
