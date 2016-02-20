@@ -17,10 +17,31 @@
        </div>
 
        <script lang="javascript">
+
+
+
+       //可調參數 start **************************************
        // var gameWidth = 1000;
        var gameHeight = 800;
        var gameWidth = Math.floor($(document).width() * 0.7 -5 );
        // var gameHeight = Math.floor($(document).height() - 5);
+
+       //殭屍x軸出現位置範圍（寬度的百分比)
+       var ZOMBIE_APPEARING_POSITISION_IN_X_PERCENTAGE_FROM = 0.2;
+       var ZOMBIE_APPEARING_POSITISION_IN_X_PERCENTAGE_TO = 0.8;
+
+       //殭屍一開始的大小
+       var ZOMBIE_INIT_SCALE = 0.3;
+       // 殭屍"往前走"放大比例速度
+       var ZOMBIE_SCALE_INCREASING_RATE = 0.02;
+       // 殭屍碰到player的放大倍數
+       var ZOMBIE_MEET_PLAYER_SCALE = 2;
+
+
+       // 可調參數 end ************************************
+
+
+
 
         // phaserCreate the game object itself
         var game = new Phaser.Game(
@@ -37,12 +58,24 @@
 
         function phaserPreload() {
           game.load.image('zombie', 'zombie.gif');
+          //game.load.image('zombie', 'zombie2.jpg');
         }
 
         var zombieGroup;
-        var walkingZombies = [];
+        var ZOMBIE_APPEARING_POSITISION_IN_X_POINT_FROM;
+        var ZOMBIE_APPEARING_POSITISION_IN_X_POINT_TO;
+        var ZOMBIE_APPEARING_POSITISION_IN_X_POINT_CENTER;
+        var isAllZombiePaused;
+        var isDebug;
+        var zombieWaitingForAnswer; // 被點到，或是碰到player的殭屍
+
         function phaserCreate() {
           game.physics.startSystem(Phaser.Physics.ARCADE);
+
+          // pre-calculation
+          ZOMBIE_APPEARING_POSITISION_IN_X_POINT_FROM = Math.floor(game.world.width * ZOMBIE_APPEARING_POSITISION_IN_X_PERCENTAGE_FROM);
+          ZOMBIE_APPEARING_POSITISION_IN_X_POINT_TO = Math.floor(game.world.width * ZOMBIE_APPEARING_POSITISION_IN_X_PERCENTAGE_TO);
+          ZOMBIE_APPEARING_POSITISION_IN_X_POINT_CENTER = (ZOMBIE_APPEARING_POSITISION_IN_X_POINT_TO - ZOMBIE_APPEARING_POSITISION_IN_X_POINT_FROM) /2;
 
           zombieGroup = game.add.group();
           zombieGroup.enableBody = true;
@@ -51,63 +84,167 @@
           zombieGroup.setAll('anchor.y', 0);
           zombieGroup.setAll('outOfBoundsKill', true);
 
+          isAllZombiePaused = false;
+          isDebug = getUrlVars()['debug'] === "1";
+
           game.time.events.loop(Phaser.Timer.SECOND * 2, zombieRising, this);
           //zombieRising();
         }
 
         function zombieRising() {
+          if(isAllZombiePaused) {
+            return;
+          }
+
           var zombie = zombieGroup.getFirstExists(false);
           if(zombie === null) {
             return;
           }
-          var x  =  game.rnd.integerInRange(game.world.width * 0.15,
-                                              game.world.width * 0.4);
+          // zombie appearing position x-axis
+          var x  =  game.rnd.integerInRange(ZOMBIE_APPEARING_POSITISION_IN_X_POINT_FROM,
+                                              ZOMBIE_APPEARING_POSITISION_IN_X_POINT_TO);
           zombie.reset(x, 15);
-          zombie.scale.setTo(0.2,0.2);
-          walkingZombies.push(zombie);
+          zombie.scale.setTo(ZOMBIE_INIT_SCALE,ZOMBIE_INIT_SCALE);
           zombieGroup.sendToBack(zombie);
-          zombie.body.velocity.y = 4;
+          zombie.body.velocity.y = 3;
           zombie.body.acceleration.y = 1.5;
-          zombie.body.velocity.x = -1 * game.rnd.integerInRange(18, 40);
-          zombie.body.acceleration.x = -1 * game.rnd.realInRange(2.0, 4.6);
-          if(x >= game.world.width *0.3) {
-            zombie.body.velocity.x = -1 * game.rnd.integerInRange(25, 55);
-            zombie.body.acceleration.x = -1 * game.rnd.realInRange(3.5, 6.2);
+          zombie.body.velocity.x = game.rnd.integerInRange(10, 25);
+          zombie.body.acceleration.x = game.rnd.realInRange(3.0, 4.6);
+          if(x >= ZOMBIE_APPEARING_POSITISION_IN_X_POINT_CENTER) { //出現位置靠右邊的往左走
+            zombie.body.velocity.x = game.rnd.integerInRange(-10, -25);
+            zombie.body.acceleration.x = game.rnd.realInRange(-3, -4.2);
           }
+          zombie.inputEnabled = true;
+          zombie.tint = 0xFFFFFF;
+          zombie.events.onInputDown.add(zombieClick, this);
+          zombie.events.onInputOver.add(zombieMouseHover, this);
+          zombie.events.onInputOut.add(zombieMouseHoverOut, this);
+
+          var ansTextArea = game.make.text(0,
+                                            100,
+                                            "System.out.println('_____');\nSystem.out.exit(1);",
+                                            { font: "15px Arial",
+                                              fill: "#40FF00",
+                                              wordWrap: false,
+                                              align: "left",
+                                              backgroundColor: "#1C1C1C"
+                                            });
+          var ansTypeArea = game.make.text(0, 150,
+                                          "HelloWorld",
+                                          { font: "15px Arial",
+                                            fill: "#F7FE2E",
+                                            wordWrap: false,
+                                            align: "center",
+                                            backgroundColor: "#1C1C1C"
+                                          });
+          zombie.addChild(ansTextArea);
+          zombie.addChild(ansTypeArea)
+          zombie.ansTextArea = ansTextArea;
+          zombie.ansTyeArea = ansTypeArea;
+
+          if(isDebug) {
+            console.log("live counting:" + zombieGroup.countLiving() + ", dead counting:" +zombieGroup.countDead());
+          }
+        }
+
+        function pauseAllAliveZombies() {
+          isAllZombiePaused = true;
+
+          zombieGroup.forEachAlive(function(zombie_foo) {
+            zombie_foo.body.enable = false;
+          }, this);
+
+        }
+
+        function resumeAllPasuedZombies() {
+          zombieGroup.forEachAlive(function(zombie_foo) {
+            zombie_foo.body.enable = true;
+          }, this);
+
+          isAllZombiePaused = false;
+        }
+
+        function zombieMouseHover(zombieHoverOn, point) {
+          zombieHoverOn.tint = 0xFE2E2E;
+        }
+
+        function zombieMouseHoverOut(zombieHoverThenOut, point) {
+          zombieHoverThenOut.tint = 0xFFFFFF;
+        }
+
+        function zombieClick(clickedZombie, point) {
+          if(isDebug) {
+            console.log("zombie clicked at:" + zombieGroup.getIndex(clickedZombie));
+          }
+
+
+
+          if(isAllZombiePaused) {
+            clickedZombie.parent.setChildIndex(clickedZombie, clickedZombie.zIndexBeforeClicked);
+
+            if(isDebug) {
+              console.log("zombie moved back to " + clickedZombie.z);
+            }
+            resumeAllPasuedZombies();
+          } else {
+
+            clickedZombie.zIndexBeforeClicked = clickedZombie.z;
+            zombieGroup.bringToTop(clickedZombie);
+            if(isDebug) {
+              console.log("zombie was on " + clickedZombie.zIndexBeforeClicked + ", and moved to front at " + clickedZombie.z);
+            }
+            zombieWaitingForAnswer = clickedZombie;
+            pauseAllAliveZombies();
+          }
+
+
         }
 
 
         function phaserUpdate() {
-          for(var i = 0; i <  walkingZombies.length; i++) {
-            var zombie = walkingZombies[i];
 
-            var newscale = zombie.y * 0.03;
-            if(newscale >= 0.2) {
-              zombie.scale.x = newscale;
-              zombie.scale.y = newscale;
-            }
+          if(isAllZombiePaused === false) {
+            zombieGroup.forEachAlive(function(zombie) {
+              var newscale = zombie.y * ZOMBIE_SCALE_INCREASING_RATE;
+              if(newscale >= ZOMBIE_INIT_SCALE) {
+                zombie.scale.x = newscale;
+                zombie.scale.y = newscale;
+              }
 
-            if(zombie.scale.x > 4) {
-              zombie.kill();
-              walkingZombies.slice(i, 1);
-            }
 
+              if(zombie.scale.x > ZOMBIE_MEET_PLAYER_SCALE) {
+                // meet the player
+                zombie.kill();
+              }
+
+            }, this);
           }
-
         }
 
 
         function phaserRender() {
 
-          var foo = walkingZombies[0];
-          if(foo !== undefined) {
-            game.debug.bodyInfo(foo, 20, 32);
+          if(isDebug) {
+            var foo = zombieGroup.getFirstAlive();
+            if(foo !== undefined && foo !== null) {
+              game.debug.bodyInfo(foo, 20, 32);
+            }
           }
-
-
-
-
         }
+
+
+        function getUrlVars(){
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for(var i = 0; i < hashes.length; i++)
+            {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
+
 
        </script>
    </body>
