@@ -19,14 +19,16 @@
             paths: {
                 boot: 'js/boot',
                 battle: 'js/battle',
+                boss: 'js/boss',
+                creature: 'js/creature',
                 PlayGround: 'js/PlayGround',
                 Cookies: 'bower_components/js-cookie/src/js.cookie',
                 swal : 'bower_components/bootstrap-sweetalert/lib/sweet-alert.min',
             }
         });
 
-        require( ["boot", "battle", "PlayGround"],
-            function(boot, battle, PlayGround) {
+        require( ["boot", "battle", "boss", "creature", "PlayGround"],
+            function(boot, battle, boss, creature, PlayGround) {
                 //This function will be called when all the dependencies
                 //listed above are loaded. Note that this function could
                 //be called before the page is loaded.
@@ -58,6 +60,8 @@
                 var battleObj = new battle.battle(game)();
                 game.States.battle = battleObj;
 
+                game.States.boss = boss.boss(game);
+
                 $(document).on("keydown", function (e) {
                     battleObj.handleBackspace(e);
                 });
@@ -66,6 +70,7 @@
                 //把定義好的場景添加到遊戲中
                 game.state.add('boot', game.States.boot);
                 game.state.add('battle', game.States.battle);
+                game.state.add('boss', game.States.boss);
                 
                 game.state.start('boot');
             }
