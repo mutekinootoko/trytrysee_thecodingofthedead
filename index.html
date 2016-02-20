@@ -3,10 +3,18 @@
        <meta charset="UTF-8"/>
        <title>try try see</title>
        <script src="phaser.min.js"></script>
+       <script src="jquery-2.2.0.min.js"></script>
+   </head>
+   <body>
+       <div id="tts"></div>
+
        <script lang="javascript">
+       var gameWidth = Math.floor($(document).width() * 0.7 -5 );
+       var gameHeight = Math.floor($(document).height() - 5);
+
         // phaserCreate the game object itself
         var game = new Phaser.Game(
-           1250, 680,                       // 800 x 600 rebackgroundolution.
+            gameWidth,    gameHeight,                   // 800 x 600 rebackgroundolution.
            Phaser.AUTO,                   // Allow Phaser to determine Canvas or WebGL
            "tts",                   // The HTML element ID we will connect Phaser to.
            {                               // Functions (callbacks) for Phaser to call in
@@ -28,12 +36,12 @@
 
           zombieGroup = game.add.group();
           zombieGroup.enableBody = true;
-          zombieGroup.createMultiple(20, 'zombie');
+          zombieGroup.createMultiple(10, 'zombie');
           zombieGroup.setAll('anchor.x', 0);
           zombieGroup.setAll('anchor.y', 0);
           zombieGroup.setAll('outOfBoundsKill', true);
 
-          game.time.events.loop(Phaser.Timer.SECOND, zombieRising, this);
+          game.time.events.loop(Phaser.Timer.SECOND * 2, zombieRising, this);
           //zombieRising();
         }
 
@@ -42,50 +50,55 @@
           if(zombie === null) {
             return;
           }
-          var x  =  game.rnd.integerInRange(0, game.world.width * 0.8);
-          zombie.goingLeft = (x > game.world.centerX) ;
-          zombie.reset(x, 0);
-          zombie.scale.setTo(0.3,0.3);
+          var x  =  game.rnd.integerInRange(game.world.width * 0.15,
+                                              game.world.width * 0.4);
+          zombie.reset(x, 15);
+          zombie.scale.setTo(0.2,0.2);
           walkingZombies.push(zombie);
-          zombie.sendToBack();
-          zombieMoveForward(zombie);
+          zombieGroup.sendToBack(zombie);
+          zombie.body.velocity.y = 4;
+          zombie.body.acceleration.y = 1.5;
+          zombie.body.velocity.x = -1 * game.rnd.integerInRange(18, 40);
+          zombie.body.acceleration.x = -1 * game.rnd.realInRange(2.0, 4.6);
+          if(x >= game.world.width *0.3) {
+            zombie.body.velocity.x = -1 * game.rnd.integerInRange(25, 55);
+            zombie.body.acceleration.x = -1 * game.rnd.realInRange(3.5, 6.2);
+          }
         }
+
 
         function phaserUpdate() {
           for(var i = 0; i <  walkingZombies.length; i++) {
             var zombie = walkingZombies[i];
-            zombie.scale.x += 0.005;
-            zombie.scale.y += 0.005;
 
-            /*
-            if(zombie.x > game.world.centerX * 0.3) {
-              zombie.x -= 1;
-            } else if(zombie.x < game.world.centerX * 0.3)
-            */
-            if(zombie.goingLeft) {
-              zombie.x -= 2;
+            var newscale = zombie.y * 0.03;
+            if(newscale >= 0.2) {
+              zombie.scale.x = newscale;
+              zombie.scale.y = newscale;
             }
 
-            if(zombie.y >= 80) {
+            if(zombie.scale.x > 4) {
               zombie.kill();
               walkingZombies.slice(i, 1);
             }
+
           }
 
         }
 
-        function zombieMoveForward(zombieSprite) {
-          zombieSprite.body.velocity.y = 5;
-        }
 
         function phaserRender() {
-          //game.debug.bodyInfo(zombie, 20, 32);
+
+          var foo = walkingZombies[0];
+          if(foo !== undefined) {
+            game.debug.bodyInfo(foo, 20, 32);
+          }
+
+
+
 
         }
 
        </script>
-   </head>
-   <body>
-       <div id="tts"></div>
    </body>
 </html>
