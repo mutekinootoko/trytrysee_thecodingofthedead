@@ -37,6 +37,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
             var finalBoss = null;
             var shakeLoop = null; // for initial boss movement shaking
+            var explosionSound = null; // boss dying sound effect
             var shakeSound = null; // earthquake sound effect to show boss
             var currentCodeQuestion; //目前做的題目
 
@@ -64,6 +65,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
             this.create = function(){
                 shakeSound = game.add.audio('earthquake');
+                explosionSound = game.add.audio('explosion');
 
                 //魔王關答案區打開
                 bossAnswerDiv.show();
@@ -261,6 +263,9 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             }
 
             function killBoss(zombie) {
+                if (explosionSound) {
+                    explosionSound.play();
+                }
                 zombie.loadTexture('bossDie', 0);
                 zombie.animations.add('die');
                 zombie.animations.play('die', 7, false);
