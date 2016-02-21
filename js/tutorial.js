@@ -70,7 +70,6 @@ define(["creature"], function(creature){
 
                 //characterRising(); // Lono: I hate waiting
                 //game.time.events.loop(Phaser.Timer.SECOND*0.3 , characterRising, this);
-
             };
 
             this.update = function() {
