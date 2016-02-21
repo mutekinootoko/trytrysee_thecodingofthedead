@@ -115,7 +115,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
               if(aceeditorObj.getValue() === 'yo') {
                 // cheat
-                finalBoss.say('aaaaaaaah~~~ Bluemix the Holy one, save me~~~');
+                finalBoss.say('aaaah~ Bluemix the Holy one, save me~');
                 killBoss(finalBoss);
                 return;
               }
@@ -167,7 +167,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                   playerGetAttackByZombie(finalBoss);
                 } else if (JSON.stringify(data.result) === JSON.stringify(expectedOutput)) {
                   // answer is currect!
-                  finalBoss.say('aaaaaaaah~~~ Bluemix the Holy one, save me~~~');
+                  finalBoss.say('aaaah~ Bluemix the Holy one, save me~~');
                   killBoss(finalBoss);
                 } else {
                   // wrong answer
@@ -264,11 +264,17 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             }
 
             function killBoss(zombie) {
+              //魔王關答案區打開
+              bossAnswerDiv.hide();
+              codeRunButton.hide();
+              
                 zombie.loadTexture('bossDie', 0);
                 zombie.animations.add('die');
                 zombie.animations.play('die', 7, false);
                 zombie.animations.currentAnim.onComplete.add(function() {
                     killAZombie(zombie);
+
+                    finalBoss = null;
 
                     // move to next Stage
                     //game.state.start('battle');
