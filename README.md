@@ -45,7 +45,7 @@ Please set browser window size to **1027x768** or above for best experiences.
 ### Zombies
 Answer **yo** to cheat.
 ### Golem
-Correct code are actually in the comments, or remove all code and type **yo**. :D
+Correct code are actually in the comments, or remove all code and type **yo** then hit RUN. :D
 
 ## Programming languages and Frameworks
 * Javascript

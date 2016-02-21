@@ -136,15 +136,15 @@ define(["creature"], function(creature){
                     creature.zombieInit(game)(zombie);
                     zombie.dialogs = ["Welcome to coding of dead （press any key）",
                                       "You are here to meet the great Bluemix® ?",
-                                      "Then turn on your speaker for the best experience.",
-                                      "Before you begin, I will test your coding power",
-                                      "Complete this hello world function",
+                                      "Then turn on your speakers for the best experience.",
+                                      "Before you begin, I will test your coding power.",
+                                      "Complete this hello world function.",
                                       "Hint: type 'HelloWorld' and press the ENTER key", // number 6
                                       "Good!               ",
                                       "My buddies will ask for more...",
                                       "Hints can be found on the right hand side",
                                       "or you can type 'yo' to cheat...",
-                                      "Watch for your health at the top-left corner",
+                                      "Beware for your health at the top-left corner.",
                                       "If you failed, you will never see the great one.",
                                       "Good Luck!          "];
                     zombie.movingStyle = creature.movingStyle.static;
