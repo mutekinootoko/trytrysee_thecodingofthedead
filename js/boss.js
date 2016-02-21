@@ -67,12 +67,6 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
             this.create = function(){
 
-                //魔王關答案區打開
-                bossAnswerDiv.show();
-                codeRunButton.show();
-                //Run按鈕加上event
-                codeRunButton.click(runEditorCode);
-
                 bmerrorCount = 0;
 
                 game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -118,13 +112,21 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
               * check code in ace
               */
             function runEditorCode() {
+
+              if(aceeditorObj.getValue() === 'yo') {
+                // cheat
+                finalBoss.say('aaaaaaaah~~~ Bluemix the Holy one, save me~~~');
+                killBoss(finalBoss);
+                return;
+              }
+
               // check syntax first
               var annotations = aceeditorObj.getSession().getAnnotations()
               if(annotations.length > 0) {
                   for(var i = 0; i < annotations.length; i++) {
                       var foo = annotations[i];
                       if(foo.type !== "warning") {  // ignore warnings
-                          alert('SYNTAX ERROR');
+                          finalBoss.say('The Code doesn\'t even compile.');
                           playerGetAttackByZombie(finalBoss);
                           return;
                       }
@@ -163,18 +165,25 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                   // sytax error
                   finalBoss.say('The Code doesn\'t even compile.');
                   playerGetAttackByZombie(finalBoss);
-                } else if (data.result === expectedOutput) {
+                } else if (JSON.stringify(data.result) === JSON.stringify(expectedOutput)) {
                   // answer is currect!
-                  finalBoss.say('aaaaaaaah~~~ Bluemix the Holy one, safe me~~~');
+                  finalBoss.say('aaaaaaaah~~~ Bluemix the Holy one, save me~~~');
                   killBoss(finalBoss);
                 } else {
                   // wrong answer
-                  finalBoss.say('WRONG! your code return ' + JSON.stringify(data.result));
+                  finalBoss.say('WRONG! your code return ' + JSON.stringify(data.result) + ' with input ' + JSON.stringify(inputArray));
                   playerGetAttackByZombie(finalBoss);
                 }
               }).fail(function() {
                 finalBoss.say('Bluemix is not here, try again ... (error when loading service...)');
-                
+                if(++bmerrorCount >= 2) {
+                  game.time.events.add(Phaser.Timer.SECOND * 0.5, function() {
+                    finalBoss.say('Fine! I will let you pass!');
+                    game.time.events.add(Phaser.Timer.SECOND * 0.5, function() {
+                      killBoss(finalBoss);
+                    }, this);
+                  }, this);
+                }
               });
             }
 
@@ -235,6 +244,12 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                     currentCodeQuestion = CodeQuestionbase.pickQuestion();
                     questionTextArea.html(currentCodeQuestion.question);
                     aceeditorObj.setValue(currentCodeQuestion.codeTemplate, -1);
+
+                    //魔王關答案區打開
+                    bossAnswerDiv.show();
+                    codeRunButton.show();
+                    //Run按鈕加上event
+                    codeRunButton.click(runEditorCode);
 
                     finalBoss.startCountdown(ZOMBIE_SEC_TO_WAIT_FOR_ANSWER);
                     typingMode(TypingEnum.answer);
