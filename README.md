@@ -11,16 +11,13 @@ Type, Code, Kill and face the ultimate code judge system powered by IBM BluemixÂ
 
 ## Team members
 * Max
-* Hai Feng
+* Hai Feng ([github](https://github.com/haifengkao))
   * a iOS guru
-  * [github](https://github.com/haifengkao)
   * iOS Challenge 2015 first place
   * Objective-C with love
    
-* Marku
+* Marku ([github](https://github.com/mutekinootoko), [about.me](https://about.me/mutekinootoko))
   * *A Coder*
-  * [github](https://github.com/mutekinootoko)
-  * [about.me](https://about.me/mutekinootoko)
   * LLAP
 
 ## Supported browsers
