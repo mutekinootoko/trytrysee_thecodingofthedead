@@ -9,7 +9,7 @@
 define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
     //boot場景，用來做一些遊戲啟動前的準備
-    var bossStage = function(game, bossAnswerDiv, aceeditorObj, questionTextArea){
+    var bossStage = function(game, bossAnswerDiv, aceeditorObj, questionTextArea, codeRunButton){
         var func = function() {
 
             //可調參數 start **************************************
@@ -67,8 +67,9 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
                 //魔王關答案區打開
                 bossAnswerDiv.show();
+                codeRunButton.show();
                 //Run按鈕加上event
-                bossAnswerDiv.find('input').click(runEditorCode);
+                codeRunButton.click(runEditorCode);
 
                 game.physics.startSystem(Phaser.Physics.ARCADE);
                 game.add.tileSprite(-250, -150, 1250, 950, 'gameBg');

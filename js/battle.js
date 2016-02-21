@@ -63,18 +63,18 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
 
             // prevent backspace(delete) capture by firefox or chrome to 'go back'
             this.handleBackspace = function(e) {
-                if (e.which === 8 && !$(e.target).is("input, textarea")) {
-                  e.preventDefault();
-                  console.log('press backspace');
+              if (e.which === 8 && !$(e.target).is("input, textarea")) {
+                e.preventDefault();
+                console.log('press backspace');
 
-                  if(isAnyZombieWaitingForAnswer()) {
-                    // keep 'Ans:'
-                    if(zombieWaitingForAnswer.ansTypeArea.text.length > ZOMBIE_ANSWER_TYPING_AEAR_PREFIX.length) {
-                      zombieWaitingForAnswer.ansTypeArea.text = zombieWaitingForAnswer.ansTypeArea.text.substring(0, zombieWaitingForAnswer.ansTypeArea.text.length -1)
-                    }
+                if(isAnyZombieWaitingForAnswer()) {
+                  // keep 'Ans:'
+                  if(zombieWaitingForAnswer.ansTypeArea.text.length > ZOMBIE_ANSWER_TYPING_AEAR_PREFIX.length) {
+                    zombieWaitingForAnswer.ansTypeArea.text = zombieWaitingForAnswer.ansTypeArea.text.substring(0, zombieWaitingForAnswer.ansTypeArea.text.length -1)
                   }
-
                 }
+
+              }
             };
 
             this.preload = function(){
