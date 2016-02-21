@@ -1,11 +1,11 @@
 # Try Try See team members
-* Max,
+* Max
 * Kao
 * Marku
-  * *Coder*
-  * github
-  * about.me
-  * linkedin
+  * *A Coder*
+  * [github](https://github.com/mutekinootoko)
+  * [about.me](https://about.me/mutekinootoko)
+  * LLAP
 
 # The Coding of the dead
 ## Description
@@ -16,7 +16,7 @@ foo
 * Chrome
 * Safari
 
-Please set browser window size to 1027x768 or above for best experiences.
+Please set browser window size to **1027x768** or above for best experiences.
 
 ## Features
 bar
@@ -24,9 +24,9 @@ bar
 ## Cheats
 
 ## Programming languages and Frameworks
-* javascript
-* Phaser
-* ACE
-* javascript executor
+* Javascript
+* [Phaser](http://phaser.io/)
+* [ace](https://ace.c9.io/)
+* [JS-Interpreter](https://github.com/NeilFraser/JS-Interpreter)
 
 # Credit

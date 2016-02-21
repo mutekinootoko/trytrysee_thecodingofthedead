@@ -5,6 +5,7 @@
        <link href="style.css" rel="stylesheet">
        <script src="phaser.min.js"></script>
        <script src="jquery-2.2.0.min.js"></script>
+       <script src="jsinterpreter/acorn_interpreter.js"></script>
    </head>
    <body>
         <!--requirejs-->
@@ -22,15 +23,20 @@
                 boss: 'js/boss',
                 tutorial: 'js/tutorial',
                 creature: 'js/creature',
-                PlayGround: 'js/PlayGround',
+                PlayGround: 'js/Playground',
                 Cookies: 'bower_components/js-cookie/src/js.cookie',
                 swal : 'bower_components/bootstrap-sweetalert/lib/sweet-alert.min',
                 ShortQuiz: 'js/ShortQuiz',
+                AceEditor: 'js/AceEditor',
+                ace: 'js/ace-builds/src-noconflict/ace',
+                domReady: "js/domReady/domReady",
+                CodeQuestion: 'js/CodeQuestion',
+                CodeQuestionbase: 'js/CodeQuestionbase',
             }
         });
 
-        require( ["boot", "battle", "boss", "tutorial", "creature", "PlayGround", "ShortQuiz"],
-            function(boot, battle, boss, tutorial, creature, PlayGround, ShortQuiz) {
+        require( ["boot", "battle", "boss", "tutorial", "creature", "PlayGround", "ShortQuiz", "AceEditor"],
+            function(boot, battle, boss, tutorial, creature, PlayGround, ShortQuiz, AceEditor) {
                 //This function will be called when all the dependencies
                 //listed above are loaded. Note that this function could
                 //be called before the page is loaded.
@@ -40,9 +46,9 @@
                playGround = new PlayGround.PlayGround($('#question-text'));
 
                //可調參數 start **************************************
-               // var gameWidth = 1000;
-               var gameHeight = 800;
-               var gameWidth = Math.floor($(document).width() * 0.7 -5 );
+               var gameWidth = 800;
+               var gameHeight = 600;
+               // var gameWidth = Math.floor($(document).width() * 0.7 -5 );
                // var gameHeight = Math.floor($(document).height() - 5);
 
                // 可調參數 end ************************************
@@ -63,11 +69,15 @@
                 game.States.battle = battleObj;
 
                 game.States.tutorial = tutorial.tutorial(game);
-                game.States.boss = boss.boss(game);
+
+                var editor = AceEditor.initAce();
+
+                game.States.boss = boss.boss(game, $('#bossAnswer'), editor, $('#question-text'));
 
                 $(document).on("keydown", function (e) {
                     battleObj.handleBackspace(e);
                 });
+
 
 
                 //把定義好的場景添加到遊戲中
@@ -76,12 +86,22 @@
                 game.state.add('boss', game.States.boss);
                 game.state.add('tutorial', game.States.tutorial);
                 game.state.start('boot');
+
+
             }
         );
        </script>
 
        <div class="container">
-         <div class="gameview"id="tts"></div>
+         <div class="gameview">
+           <div id="bossAnswer" class="boss" style="display:none; opacity:0.8">
+<pre id="editor" class="boss-text">
+// write your code here
+</pre>
+              <input id="bossAnswerSubmitButton" type="submit" value="RUN" class="boss-button">
+           </div>
+           <div id="tts"></div>
+         </div>
          <div class="question-block" id="question-block">
            <!-- 題目這邊-->
            <div class="question-text" id="question-text">

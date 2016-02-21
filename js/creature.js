@@ -37,32 +37,35 @@ var zombieFunc = function(zombie) {
     dialogArea.anchor.set(0.4, 1.0);
     dialogArea.wordWrapWidth = 200.0;
 
-    var timeCountdownArea = game.make.text(0, 50,
-                                            "",
-                                            { font: "15px Arial",
-                                              fill: "#40FF00",
-                                              wordWrap: false,
-                                              align: "left",
-                                              backgroundColor: "#1C1C1C"
-                                            });
     var ansTextArea = game.make.text(0,
                                      0,
                                      "System.out.println('_____');\nJUST TYPE HelloWorld",
-                                     { font: "22px Arial",
+                                     { font: "15px Arial",
                                        fill: "#40FF00",
                                        wordWrap: false,
                                        align: "left",
                                        backgroundColor: "#1C1C1C"
                                      });
     ansTextArea.anchor.set(0.5, 0.5);
-    var ansTypeArea = game.make.text(0, 150,
+
+    var timeCountdownArea = game.make.text(ansTextArea.left, 50,
+                                              "",
+                                              { font: "15px Arial",
+                                                fill: "#FFFFFF",
+                                                wordWrap: false,
+                                                align: "left",
+                                                backgroundColor: "#1C1C1C"
+                                              });
+    //timeCountdownArea.anchor.set(0.5, 0.5);
+    var ansTypeArea = game.make.text(timeCountdownArea.right + 22, 50,
                                      ZOMBIE_ANSWER_TYPING_AEAR_PREFIX,
                                      { font: "15px Arial",
                                        fill: "#F7FE2E",
                                        wordWrap: false,
-                                       align: "center",
+                                       align: "left",
                                        backgroundColor: "#1C1C1C"
                                      });
+    //ansTypeArea.anchor.set(0.5, 0.5);
     // hide all dialogs
     ansTypeArea.alpha = 0.0;
     ansTextArea.alpha = 0.0;

@@ -6,10 +6,10 @@
  *  3. boss attack
  */
 
-define(["creature"], function(creature){
+define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
     //boot場景，用來做一些遊戲啟動前的準備
-    var bossStage = function(game){
+    var bossStage = function(game, bossAnswerDiv, aceeditorObj, questionTextArea){
         var func = function() {
 
             //可調參數 start **************************************
@@ -27,8 +27,8 @@ define(["creature"], function(creature){
             var healthBars; //血條 graphics 物件
             var hpText; // 血條前顯示字樣
             var PLAYER_CURRENT_HEALTH; //玩家血量
-            var bgMusic; // 背景音樂
             var zombieGrrsArray = []; //Array<audio> 殭屍叫聲, 這個不要放creature裡 @see zombieGrrrrr()
+            var gunshot; // gunshot sound
             var zombieGroup;
 
             var StateEnum = {"introductionBegin":1, "introductionEnd":2, "firstZombieBegin":3, "firstZombieEnd":4, "zombieMoving": 5}
@@ -37,6 +37,7 @@ define(["creature"], function(creature){
 
             var finalBoss = null;
             var shakeLoop = null; // for initial boss movement shaking
+            var currentCodeQuestion; //目前做的題目
 
             // prevent backspace(delete) capture by firefox or chrome to 'go back'
             this.handleBackspace = function(e) {
@@ -51,23 +52,24 @@ define(["creature"], function(creature){
                 }
             };
 
+            this.init = function () {
+              if(arguments.length > 0) {
+                PLAYER_CURRENT_HEALTH = arguments[0]; // 前一個state傳過來的 player health
+              }
+            };
+
             this.preload = function(){
-                game.load.image('boss', 'assets/bossSpriteSheet/boss.png');
-                game.load.image('hell', 'assets/hell.jpg');
-                game.load.spritesheet('bossIdle', 'assets/bossSpriteSheet/bossIdle.png', 460, 352, 6);
-                game.load.spritesheet('bossAttack', 'assets/bossSpriteSheet/bossAttack.png', 528, 372, 6);
-                game.load.audio('bgmusic', ['assets/audio/backgroundMusic.mp3', 'assets/audio/backgroundMusic.ogg']);
-                game.load.audio('zombieGrr1', ['assets/audio/zombie-1.mp3', 'assets/audio/zombie-1.ogg']);
-                game.load.audio('zombieGrr4', ['assets/audio/zombie-4.mp3', 'assets/audio/zombie-4.ogg']);
-                game.load.audio('zombieGrr10', ['assets/audio/zombie-10.mp3', 'assets/audio/zombie-10.ogg']);
-                game.load.audio('zombieGrr11', ['assets/audio/zombie-11.mp3', 'assets/audio/zombie-11.ogg']);
-                game.load.audio('zombieGrr15', ['assets/audio/zombie-15.mp3', 'assets/audio/zombie-15.ogg']);
             };
 
             this.create = function(){
 
+                //魔王關答案區打開
+                bossAnswerDiv.show();
+                //Run按鈕加上event
+                bossAnswerDiv.find('input').click(runEditorCode);
+
                 game.physics.startSystem(Phaser.Physics.ARCADE);
-                game.add.tileSprite(-250, -150, 1250, 950, 'hell');
+                game.add.tileSprite(-250, -150, 1250, 950, 'gameBg');
 
                 // world邊界設定的比camera大一點，可以做搖晃效果
                 game.world.setBounds(0, 0, game.world.width + 15, game.world.height);
@@ -78,13 +80,14 @@ define(["creature"], function(creature){
                 zombieGrrsArray.push(game.add.audio('zombieGrr11'));
                 zombieGrrsArray.push(game.add.audio('zombieGrr15'));
 
-                bgMusic = game.add.audio('bgmusic');
-                bgMusic.play('', 0, 1, true);//loop
+                gunshot = game.add.audio('gunshot')
 
                 isDebug = getUrlVars()['debug'] === "1";
 
                 // 血條位置
-                PLAYER_CURRENT_HEALTH = 100;
+                if(PLAYER_CURRENT_HEALTH <= 0) { //前一個state會傳血量過來 fail safe 才變成100
+                  PLAYER_CURRENT_HEALTH = 100;
+                }
                 hpText = game.add.text(1, 10,
                                         "HP:",
                                         { font: "20px Arial", fill: "#FFFFFF", });
@@ -98,13 +101,81 @@ define(["creature"], function(creature){
 
             this.update = function() {
                 characterRising();
-
-                // 更新血量, don't update all the times...too costy
-                //drawHealthBarsNoArg();
             }
 
 
             this.render = function() {
+            }
+
+            /**
+              * check code in ace
+              */
+            function runEditorCode() {
+              // check syntax first
+              var annotations = aceeditorObj.getSession().getAnnotations()
+              if(annotations.length > 0) {
+                  for(var i = 0; i < annotations.length; i++) {
+                      var foo = annotations[i];
+                      if(foo.type !== "warning") {  // ignore warnings
+                          alert('SYNTAX ERROR');
+                          return;
+                      }
+                  }
+              }
+              alert('not yet complete!');
+              return;
+
+              // TODO check function name, function name must match
+              var inputArray = codequestion.theinputArray;
+              var functionName = codequestion.functionName;
+              var expectedOutput = codequestion.expectedOutput;
+
+              var postfix = codequestion.getFunctionCallString();
+              var runcode = aceeditorObj.getValue() + '\n' + postfix + ';';
+              var myInterpreter = new Interpreter(runcode);
+              myInterpreter.run(); // so far, following code only support run and return with string, array, number, boolean
+
+              var editorCodeOutput;
+              if(myInterpreter.value.type === 'string') {
+                  editorCodeOutput =  ('"' + myInterpreter.value.data + '"');
+              } else if(myInterpreter.value.type === 'object') {
+                  // assuming Array, string join with ','
+                  // not good, dirty...
+                  editorCodeOutput = myInterpreter.value.toString();
+              }  else if (myInterpreter.value.type === 'number') {
+                  editorCodeOutput = myInterpreter.value.data;
+              } else  if(myInterpreter.value.type === 'boolean') {
+                  editorCodeOutput = myInterpreter.value.data;
+              } else {
+                  // error handler.
+                  console.log('unexpected return type.');
+              }
+
+              var isSuccess;
+              if(expectedOutput instanceof Array ) {
+                  isSuccess = (expectedOutput.toString() === editorCodeOutput);
+              } else  {
+                  isSuccess = (expectedOutput === editorCodeOutput);
+              }
+
+              if(isSuccess) {
+                  // TODO code test success
+                  swal({
+                    title: "Game Finished",
+                    text: "You Win!",
+                    type: "info",
+                    confirmButtonText: "OK",
+                    cancelButtonText: "Cancel",
+                    closeOnCancel: true,
+                  }, function(isConfirm) {
+                  });
+                  playGround.player.sendLose();
+                  playGround.reset();
+              } else {
+                  // TODO code test fail
+              }
+
+              printResult(isSuccess, inputArray, expectedOutput, editorCodeOutput);
             }
 
             function characterRising() {
@@ -127,7 +198,7 @@ define(["creature"], function(creature){
 
                     zombieGroup.bringToTop(boss);
                     boss = creature.zombieInit(game)(boss);
-                    boss.dialogs = ["Welcome to Hell", "I'm your boss", "if you can solve this problem"];
+                    boss.dialogs = ["Impressive!", "But your journey ends here.", "Solve my quiz or prepare to die!"];
                     boss.movingStyle = creature.movingStyle.static;
 
                     boss.scale.setTo(1.5, 1.5);
@@ -154,7 +225,13 @@ define(["creature"], function(creature){
                         typingMode(TypingEnum.dialog);
                     }
                 }else if (currentState == StateEnum.introductionEnd) {
-                    finalBoss.hilight();
+                    //finalBoss.hilight();  不要hilight，反正只有一個boss，也不需要顯示字。
+
+                    // 顯示問題
+                    currentCodeQuestion = CodeQuestionbase.pickQuestion();
+                    questionTextArea.html(currentCodeQuestion.question);
+                    aceeditorObj.setValue(currentCodeQuestion.codeTemplate, -1);
+
                     finalBoss.startCountdown(ZOMBIE_SEC_TO_WAIT_FOR_ANSWER);
                     typingMode(TypingEnum.answer);
 
@@ -165,6 +242,19 @@ define(["creature"], function(creature){
                     finalBoss.onAttackSignal.add(playerGetAttackByZombie, this);
                     // TODO 註冊zombieOnDeath 事件
                 }
+            }
+
+            function killBoss(zombie) {
+                zombie.loadTexture('bossDie', 0);
+                zombie.animations.add('die');
+                zombie.animations.play('die', 7, false);
+                zombie.animations.currentAnim.onComplete.add(function() {
+                    killAZombie(zombie);
+
+                    // move to next Stage
+                    //game.state.start('battle');
+
+                }, this);
             }
 
             function killAZombie(zombieToKill) {
@@ -198,6 +288,24 @@ define(["creature"], function(creature){
 
 
             }
+
+            function playerAttack(zombie) {
+                if (gunshot) {
+                    gunshot.play();
+                }
+                // should zombie moan?
+                zombieGrrrrr(zombie);
+
+                zombie.loadTexture('bossAttack', 0);
+                zombie.animations.add('attack1', [0]);
+                zombie.animations.play('attack1', 6, false);
+                zombie.animations.currentAnim.onComplete.add(function() {
+                    zombie.loadTexture('bossIdle', 0);
+                    zombie.animations.add('idle');
+                    zombie.animations.play('idle', 6, true);
+                }, this);
+            }
+
 
             function shakeScreen(){
               var bloodInTheFace = game.add.graphics(0,0);
@@ -286,11 +394,16 @@ define(["creature"], function(creature){
                             // backspace key is prevented from browser capture at the top.
                             console.log('typing mode on and key pressed: ' + char + 'in ascii number:' + char.charCodeAt());
                             switch(char.charCodeAt()) {
+                              /*
                                 case 0:
+                                case 13:
                                     // enter key
                                 if(checkAnswer(finalBoss, finalBoss.ansTypeArea.text, 'HelloWorld')) {
                                   // zombie die!
-                                  killAZombie(finalBoss);
+                                  playerAttack(finalBoss);
+
+                                  killBoss(finalBoss);
+
                                 } else {
                                   // player damaged
                                   clearZombieAnsTypeArea(finalBoss);
@@ -298,8 +411,11 @@ define(["creature"], function(creature){
 
                                 }
                                 break;
+                                */
                             default:
-                                finalBoss.ansTypeArea.text += char;
+                                playerAttack(finalBoss);
+
+                                //finalBoss.ansTypeArea.text += char;
                                 break;
                                 }
                     });
@@ -310,11 +426,13 @@ define(["creature"], function(creature){
              * ansTypingAreaText : string - text from zombie.ansTypingArea (no trim)
              * return bool
              */
+             /*
             function checkAnswer(zombieGotAnswer, ansTypingAreaText, correctAnswer) {
                 var ans = ansTypingAreaText.substring(ZOMBIE_ANSWER_TYPING_AEAR_PREFIX.length, ansTypingAreaText.length);
                 console.log('checking ans:' + ans);
                 return (ans === correctAnswer);
             }
+            */
 
             function clearZombieAnsTypeArea(zombieToClearAns) {
                 zombieToClearAns.ansTypeArea.text = ZOMBIE_ANSWER_TYPING_AEAR_PREFIX;

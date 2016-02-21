@@ -38,16 +38,6 @@ define(["creature"], function(creature){
             var bob = null;
 
             this.preload = function(){
-                game.load.image('gameBg', 'assets/gameBg.jpg');
-                game.load.spritesheet('zombieAppear', 'assets/zombieAppear.png', 220, 288, 11);
-                game.load.spritesheet('zombieHide', 'assets/zombieHide.png', 220, 288, 11);
-                game.load.spritesheet('zombieIdle', 'assets/zombieIdle.png', 200, 308, 6);
-                game.load.audio('bgmusic', ['assets/audio/backgroundMusic.mp3', 'assets/audio/backgroundMusic.ogg']);
-                game.load.audio('zombieGrr1', ['assets/audio/zombie-1.mp3', 'assets/audio/zombie-1.ogg']);
-                game.load.audio('zombieGrr4', ['assets/audio/zombie-4.mp3', 'assets/audio/zombie-4.ogg']);
-                game.load.audio('zombieGrr10', ['assets/audio/zombie-10.mp3', 'assets/audio/zombie-10.ogg']);
-                game.load.audio('zombieGrr11', ['assets/audio/zombie-11.mp3', 'assets/audio/zombie-11.ogg']);
-                game.load.audio('zombieGrr15', ['assets/audio/zombie-15.mp3', 'assets/audio/zombie-15.ogg']);
             };
 
             this.create = function(){
@@ -151,7 +141,21 @@ define(["creature"], function(creature){
                 }
             }
 
+            function hideAZombie(zombie) {
+                zombie.loadTexture('zombieHide', 0);
+                zombie.animations.add('hide');
+                zombie.animations.play('hide', 11, false);
+                zombie.animations.currentAnim.onComplete.add(function() {
+                    killAZombie(zombie);
+
+                    // move to next Stage
+                    game.state.start('battle');
+
+                }, this);
+
+            }
             function killAZombie(zombieToKill) {
+
                 zombieToKill.killThisZombie();
                 typingMode(TypingEnum.off);
 
@@ -274,12 +278,11 @@ define(["creature"], function(creature){
                             console.log('typing mode on and key pressed: ' + char + 'in ascii number:' + char.charCodeAt());
                             switch(char.charCodeAt()) {
                                 case 0:
+                                case 13:
                                 // enter key
                                 if(checkAnswer(focusedZombie, focusedZombie.ansTypeArea.text, 'HelloWorld')) {
                                   // zombie die!
-                                  killAZombie(focusedZombie);
-                                  // move to next Stage
-                                  game.state.start('battle');
+                                  hideAZombie(focusedZombie);
                                 } else {
                                   // player damaged
                                   clearZombieAnsTypeArea(focusedZombie);
