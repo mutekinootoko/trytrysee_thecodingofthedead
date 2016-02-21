@@ -172,7 +172,7 @@ var zombieFunc = function(zombie) {
         secToCount = 2;
       }
       var countingSec = secToCount;
-      zombie.timeCountdownArea.alpha = 1;
+      zombie.timeCountdownArea.alpha = 0.0; // don't show timeCountDown, it's annoying
       zombie.timeCountdownArea.text = countingSec-- + '';
       var countdownLoop = game.time.events.loop(Phaser.Timer.SECOND, function() {
         zombie.timeCountdownArea.text = countingSec  + '';

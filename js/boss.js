@@ -45,19 +45,6 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             // 讀取bluemix錯誤計數
             var bmerrorCount;
 
-            // prevent backspace(delete) capture by firefox or chrome to 'go back'
-            this.handleBackspace = function(e) {
-                if (e.which === 8 && !$(e.target).is("input, textarea")) {
-                  e.preventDefault();
-
-                  if (currentState == StateEnum.firstZombieBegin) {
-                    if(finalBoss.ansTypeArea.text.length > ZOMBIE_ANSWER_TYPING_AEAR_PREFIX.length) {
-                      finalBoss.ansTypeArea.text = finalBoss.ansTypeArea.text.substring(0, finalBoss.ansTypeArea.text.length -1)
-                    }
-                  }
-                }
-            };
-
             this.init = function () {
               if(arguments.length > 0) {
                 PLAYER_CURRENT_HEALTH = arguments[0]; // 前一個state傳過來的 player health

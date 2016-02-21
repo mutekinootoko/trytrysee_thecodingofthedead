@@ -71,7 +71,10 @@
                 game.States.boss = boss.boss(game, $('#bossAnswer'), editor, $('#question-text'), $('#bossAnswerSubmitButton'));
 
                 $(document).on("keydown", function (e) {
-                    battleObj.handleBackspace(e);
+                    var state = game.state.getCurrentState();
+                    if (state.handleBackspace) {
+                        state.handleBackspace(e);
+                    }
                 });
 
 
