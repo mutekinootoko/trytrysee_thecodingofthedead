@@ -39,6 +39,8 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
             var finalBoss = null;
             var shakeLoop = null; // for initial boss movement shaking
+            var explosionSound = null; // boss dying sound effect
+            var shakeSound = null; // earthquake sound effect to show boss
             var currentCodeQuestion; //目前做的題目
             // 讀取bluemix錯誤計數
             var bmerrorCount;
@@ -66,6 +68,8 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             };
 
             this.create = function(){
+                shakeSound = game.add.audio('earthquake');
+                explosionSound = game.add.audio('explosion');
 
                 bmerrorCount = 0;
 
@@ -219,6 +223,9 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                     finalBoss = boss;
                     currentState = StateEnum.zombieMoving;
 
+                    // play(marker, position, volume, loop, forceRestart)
+                    shakeSound.play('', 0, 1.0, true);//loop
+
                     shakeScreen();
                     shakeLoop = game.time.events.loop(Phaser.Timer.SECOND*0.2, shakeScreen, this);
 
@@ -229,6 +236,17 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                             // remove shakeloop earlier, otherwise the screen will shake when the boss is on the ground
                             game.time.events.remove(shakeLoop);
                             shakeLoop = null;
+
+                            // stop the shaking sound gracefully
+                            game.time.events.loop(Phaser.Timer.SECOND * 0.1, function() {
+                                if (!shakeSound) {return;}
+                                if (shakeSound.volume <= 0.0) {
+                                    shakeSound.stop();
+                                    return;
+                                }
+                                shakeSound.volume -= 0.1;
+                            });
+
                         }
                     }
                     if (finalBoss.y > game.world.height - 300.0) {
@@ -264,6 +282,9 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             }
 
             function killBoss(zombie) {
+                if (explosionSound) {
+                    explosionSound.play();
+                }
                 zombie.loadTexture('bossDie', 0);
                 zombie.animations.add('die');
                 zombie.animations.play('die', 7, false);
