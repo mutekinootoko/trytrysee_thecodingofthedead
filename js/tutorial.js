@@ -130,7 +130,7 @@ define(["creature"], function(creature){
                                       "Before you begin, I will test your brain power",
                                       "Please write a hello world function",
                                       "Hint: type 'HelloWorld' and press the ENTER key", // number 6
-                                      "Good!               ", // number 6
+                                      "Good!               ",
                                       "My buddies will ask you more",
                                       "Hints can be found on the big gray right panel",
                                       "or you can type 'yo' to bypass the quiz",
