@@ -22,7 +22,7 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
             // 這個會影響放大倍數算法，也就會間接影響到zombie meet play判斷
             var ZOMBIE_TARGET_Y = 400.0;
             // 殭屍碰到player的放大倍數
-            var ZOMBIE_MEET_PLAYER_SCALE = 1.5;
+            var ZOMBIE_MEET_PLAYER_SCALE = 1.0;
 
             var ZOMBIE_START_Y = 40.0; // half of the initial zombie hieght
             //殭屍等待答案時間
@@ -115,7 +115,7 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
 
                 zombieGroup = game.add.group();
                 zombieGroup.enableBody = true;
-                zombieGroup.createMultiple(MAX_ZOMBIE + 5, 'zombieGo'); // we need some buffer
+                zombieGroup.createMultiple(MAX_ZOMBIE + 5, ''); // we need some buffer
                 zombieGroup.setAll('anchor.x', 0.5);
                 zombieGroup.setAll('anchor.y', 0.5);
                 zombieGroup.setAll('outOfBoundsKill', true);
@@ -238,6 +238,13 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                 if(zombie === null) {
                     return;
                 }
+                var zombieSprite = game.make.sprite(0, 0, 'zombieGo');
+                zombieSprite.anchor.set(0.5, 0.5);
+                zombieSprite.scale.set(1.5, 1.5);
+                zombie.width = zombieSprite.width;
+                zombie.height = zombieSprite.height;
+                zombie.zombie = zombieSprite;
+                zombie.addChild(zombieSprite);
 
                 // "undo" anchor effect
                 // zombie appearing position x-axis
@@ -287,9 +294,9 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                 // Lono: fix velocity, looks more natural
                 zombie.body.acceleration.x = 2.0*(0.3*game.world.width - zombie.x + randomOffset)/(t*t) - 2.0*zombie.body.velocity.x/t;
 
-                zombie.loadTexture('zombieGo', 0);
-                zombie.animations.add('go');
-                zombie.animations.play('go', 10, true);
+                zombie.zombie.loadTexture('zombieGo', 0);
+                zombie.zombie.animations.add('go');
+                zombie.zombie.animations.play('go', 10, true);
                 zombie = creature.zombieInit(game)(zombie);
 
                 // 註冊zombieAttack事件（signal, just like NSNotificationCenter）
@@ -326,9 +333,9 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
 
                 zombieGroup.forEachAlive(function(zombie_foo) {
                     zombie_foo.body.enable = false;
-                    zombie_foo.loadTexture('zombieIdle', 0);
-                    zombie_foo.animations.add('idle');
-                    zombie_foo.animations.play('idle', 6, true);
+                    zombie_foo.zombie.loadTexture('zombieIdle', 0);
+                    zombie_foo.zombie.animations.add('idle');
+                    zombie_foo.zombie.animations.play('idle', 6, true);
                 }, this);
 
             }
@@ -336,9 +343,9 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
             function resumeAllPasuedZombies() {
                 zombieGroup.forEachAlive(function(zombie_foo) {
                     zombie_foo.body.enable = true;
-                    zombie_foo.loadTexture('zombieGo', 0);
-                    zombie_foo.animations.add('go');
-                    zombie_foo.animations.play('go', 10, true);
+                    zombie_foo.zombie.loadTexture('zombieGo', 0);
+                    zombie_foo.zombie.animations.add('go');
+                    zombie_foo.zombie.animations.play('go', 10, true);
                 }, this);
 
                 isAllZombiePaused = false;
@@ -357,10 +364,10 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
 
             function killAZombieWithAnimation(zombieToKill) {
 
-              zombieToKill.loadTexture('zombieDie', 0);
-              zombieToKill.animations.add('die');
-              zombieToKill.animations.play('die', 8, false);
-              zombieToKill.animations.currentAnim.onComplete.add(function() {
+              zombieToKill.zombie.loadTexture('zombieDie', 0);
+              zombieToKill.zombie.animations.add('die');
+              zombieToKill.zombie.animations.play('die', 8, false);
+              zombieToKill.zombie.animations.currentAnim.onComplete.add(function() {
                   killAZombie(zombieToKill);
               }, this);
             }
@@ -404,12 +411,12 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
               // 殭屍叫
               zombieGrrrrr(theZombieAttackingPlayer);
 
-              theZombieAttackingPlayer.loadTexture('zombieHit', 0);
-              theZombieAttackingPlayer.animations.add('attack1', [0, 1, 2, 3]);
-              theZombieAttackingPlayer.animations.play('attack1', 9, false);
-              theZombieAttackingPlayer.animations.currentAnim.onComplete.add(function() {
-                  theZombieAttackingPlayer.animations.add('attack2', [4, 5, 6]);
-                  theZombieAttackingPlayer.animations.play('attack2', 4, false);
+              theZombieAttackingPlayer.zombie.loadTexture('zombieHit', 0);
+              theZombieAttackingPlayer.zombie.animations.add('attack1', [0, 1, 2, 3]);
+              theZombieAttackingPlayer.zombie.animations.play('attack1', 9, false);
+              theZombieAttackingPlayer.zombie.animations.currentAnim.onComplete.add(function() {
+                  theZombieAttackingPlayer.zombie.animations.add('attack2', [4, 5, 6]);
+                  theZombieAttackingPlayer.zombie.animations.play('attack2', 4, false);
                   attackedEffect(theZombieAttackingPlayer);
               }, this);
 
@@ -423,19 +430,19 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                 // should zombie moan?
                 zombieGrrrrr(zombie);
 
-                zombie.loadTexture('zombieHit', 0);
-                zombie.animations.add('attack1', [0, 1]);
-                zombie.animations.play('attack1', 9, false);
-                zombie.animations.currentAnim.onComplete.add(function() {
-                    zombie.loadTexture('zombieIdle', 0);
-                    zombie.animations.add('idle');
-                    zombie.animations.play('idle', 6, true);
+                zombie.zombie.loadTexture('zombieHit', 0);
+                zombie.zombie.animations.add('attack1', [0, 1]);
+                zombie.zombie.animations.play('attack1', 9, false);
+                zombie.zombie.animations.currentAnim.onComplete.add(function() {
+                    zombie.zombie.loadTexture('zombieIdle', 0);
+                    zombie.zombie.animations.add('idle');
+                    zombie.zombie.animations.play('idle', 6, true);
                 }, this);
             }
 
             function attackedEffect(theZombieAttackingPlayer) {
-              theZombieAttackingPlayer.loadTexture('zombieIdle', 0);
-              theZombieAttackingPlayer.animations.play('idle', 6, true);
+              theZombieAttackingPlayer.zombie.loadTexture('zombieIdle', 0);
+              theZombieAttackingPlayer.zombie.animations.play('idle', 6, true);
               PLAYER_CURRENT_HEALTH -= ZOMBIE_HIT_POINT;
               drawHealthBarsNoArg();
               // 紅畫面，搖視角效果

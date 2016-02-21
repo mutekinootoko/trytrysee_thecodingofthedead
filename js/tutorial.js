@@ -97,25 +97,35 @@ define(["creature"], function(creature){
                     // show the introductory character
                     zombieGroup = game.add.group();
                     zombieGroup.enableBody = true;
-                    zombieGroup.createMultiple(1, 'zombieAppear');
+                    zombieGroup.createMultiple(1, '');
                     zombieGroup.setAll('anchor.x', 0.5);
                     zombieGroup.setAll('anchor.y', 0.5);
                     zombieGroup.setAll('outOfBoundsKill', true);
                     var zombie = zombieGroup.getFirstExists(false);
 
                     if(zombie === null) { return; }
+
+                    var zombieSprite = game.make.sprite(0, 0, 'zombieAppear');
+                    zombieSprite.anchor.set(0.5, 0.5);
+                    zombieSprite.scale.set(1.5, 1.5);
+                    zombie.width = zombieSprite.width;
+                    zombie.height = zombieSprite.height;
+                    zombie.zombie = zombieSprite;
+                    zombie.addChild(zombieSprite);
+
+
                     currentState = StateEnum.zombieMoving;
 
-                    zombie.animations.add('appear');
-                    zombie.animations.play('appear', 4, false);
-                    zombie.animations.currentAnim.onComplete.add(function() {
+                    zombie.zombie.animations.add('appear');
+                    zombie.zombie.animations.play('appear', 4, false);
+                    zombie.zombie.animations.currentAnim.onComplete.add(function() {
 
-                        zombie.loadTexture('zombieIdle', 0);
-                        zombie.animations.add('idle');
-                        zombie.animations.play('idle', 6, false);
-                        zombie.animations.currentAnim.onComplete.add(function() {
+                        zombie.zombie.loadTexture('zombieIdle', 0);
+                        zombie.zombie.animations.add('idle');
+                        zombie.zombie.animations.play('idle', 6, false);
+                        zombie.zombie.animations.currentAnim.onComplete.add(function() {
                             currentState = StateEnum.introductionBegin;
-                        zombie.animations.play('idle', 6, true);
+                        zombie.zombie.animations.play('idle', 6, true);
                         }, this);
 
                     }, this);
@@ -139,7 +149,7 @@ define(["creature"], function(creature){
                                       "Good Luck!          "];
                     zombie.movingStyle = creature.movingStyle.static;
 
-                    zombie.scale.setTo(1.3, 1.3);
+                    zombie.scale.setTo(1.0, 1.0);
 
                     focusedZombie = zombie;
 
@@ -168,10 +178,10 @@ define(["creature"], function(creature){
             }
 
             function hideAZombie(zombie) {
-                zombie.loadTexture('zombieHide', 0);
-                zombie.animations.add('hide');
-                zombie.animations.play('hide', 11, false);
-                zombie.animations.currentAnim.onComplete.add(function() {
+                zombie.zombie.loadTexture('zombieHide', 0);
+                zombie.zombie.animations.add('hide');
+                zombie.zombie.animations.play('hide', 11, false);
+                zombie.zombie.animations.currentAnim.onComplete.add(function() {
                     killAZombie(zombie);
 
                     // move to next Stage
@@ -204,12 +214,12 @@ define(["creature"], function(creature){
 
             function playerGetAttackByZombie(theZombieAttackingPlayer) {
 
-              //focusedZombie.loadTexture('zombieAttack', 0);
-              //focusedZombie.animations.add('attack1', [0, 1, 2]);
-              //focusedZombie.animations.play('attack1', 6, false);
-              //focusedZombie.animations.currentAnim.onComplete.add(function() {
-                  //focusedZombie.animations.add('attack2', [3, 4, 5]);
-                  //focusedZombie.animations.play('attack2', 6, false);
+              //focusedZombie.zombie.loadTexture('zombieAttack', 0);
+              //focusedzombie.zombie.animations.add('attack1', [0, 1, 2]);
+              //focusedzombie.zombie.animations.play('attack1', 6, false);
+              //focusedzombie.zombie.animations.currentAnim.onComplete.add(function() {
+                  //focusedzombie.zombie.animations.add('attack2', [3, 4, 5]);
+                  //focusedzombie.zombie.animations.play('attack2', 6, false);
                   //attackedEffect(theZombieAttackingPlayer);
               //}, this);
 
@@ -246,8 +256,8 @@ define(["creature"], function(creature){
             }
 
             function attackedEffect(theZombieAttackingPlayer) {
-              focusedZombie.loadTexture('zombieIdle', 0);
-              focusedZombie.animations.play('idle', 6, true);
+              focusedZombie.zombie.loadTexture('zombieIdle', 0);
+              focusedzombie.zombie.animations.play('idle', 6, true);
               PLAYER_CURRENT_HEALTH -= 20;
               drawHealthBarsNoArg();
               // 紅畫面，搖視角效果
@@ -333,10 +343,8 @@ define(["creature"], function(creature){
                                 }
                                 break;
                             default:
-                                focusedZombie.ansTypeArea.text += char;
-
-                                var ans = zombieWaitingForAnswer.ansTypeArea.text + char;
-                                zombieWaitingForAnswer.setAnsText(ans);
+                                var ans = focusedZombie.ansTypeArea.text + char;
+                                focusedZombie.setAnsText(ans);
                                 break;
                                 }
                     });

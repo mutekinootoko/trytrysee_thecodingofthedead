@@ -196,7 +196,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                     // show the introductory character
                     zombieGroup = game.add.group();
                     zombieGroup.enableBody = true;
-                    zombieGroup.createMultiple(1, 'bossIdle');
+                    zombieGroup.createMultiple(1, '');
                     zombieGroup.setAll('anchor.x', 0.5);
                     zombieGroup.setAll('anchor.y', 0.5);
                     zombieGroup.setAll('outOfBoundsKill', true);
@@ -204,8 +204,16 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
                     if(boss === null) { return; }
 
-                    boss.animations.add('idle');
-                    boss.animations.play('idle', 6, true);
+                    var zombieSprite = game.make.sprite(0, 0, 'bossIdle');
+                    zombieSprite.anchor.set(0.5, 0.5);
+                    zombieSprite.scale.set(1.5, 1.5);
+                    boss.width = zombieSprite.width;
+                    boss.height = zombieSprite.height;
+                    boss.zombie = zombieSprite;
+                    boss.addChild(zombieSprite);
+
+                    boss.zombie.animations.add('idle');
+                    boss.zombie.animations.play('idle', 6, true);
 
                     boss.reset(0.5*game.world.width, -400);
 
@@ -218,7 +226,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                                    ];
                     boss.movingStyle = creature.movingStyle.static;
 
-                    boss.scale.setTo(1.5, 1.5);
+                    boss.scale.setTo(1.0, 1.0);
 
                     finalBoss = boss;
                     currentState = StateEnum.zombieMoving;
@@ -285,10 +293,10 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                 if (explosionSound) {
                     explosionSound.play();
                 }
-                zombie.loadTexture('bossDie', 0);
-                zombie.animations.add('die');
-                zombie.animations.play('die', 7, false);
-                zombie.animations.currentAnim.onComplete.add(function() {
+                zombie.zombie.loadTexture('bossDie', 0);
+                zombie.zombie.animations.add('die');
+                zombie.zombie.animations.play('die', 7, false);
+                zombie.zombie.animations.currentAnim.onComplete.add(function() {
                     killAZombie(zombie);
 
                     // move to next Stage
@@ -319,12 +327,12 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
             function playerGetAttackByZombie(theZombieAttackingPlayer) {
 
-              finalBoss.loadTexture('bossAttack', 0);
-              finalBoss.animations.add('attack1', [0, 1, 2]);
-              finalBoss.animations.play('attack1', 6, false);
-              finalBoss.animations.currentAnim.onComplete.add(function() {
-                  finalBoss.animations.add('attack2', [3, 4, 5]);
-                  finalBoss.animations.play('attack2', 6, false);
+              finalBoss.zombie.loadTexture('bossAttack', 0);
+              finalBoss.zombie.animations.add('attack1', [0, 1, 2]);
+              finalBoss.zombie.animations.play('attack1', 6, false);
+              finalBoss.zombie.animations.currentAnim.onComplete.add(function() {
+                  finalBoss.zombie.animations.add('attack2', [3, 4, 5]);
+                  finalBoss.zombie.animations.play('attack2', 6, false);
                   attackedEffect(finalBoss);
               }, this);
 
@@ -338,13 +346,13 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                 // should zombie moan?
                 zombieGrrrrr(zombie);
 
-                zombie.loadTexture('bossAttack', 0);
-                zombie.animations.add('attack1', [0]);
-                zombie.animations.play('attack1', 6, false);
-                zombie.animations.currentAnim.onComplete.add(function() {
-                    zombie.loadTexture('bossIdle', 0);
-                    zombie.animations.add('idle');
-                    zombie.animations.play('idle', 6, true);
+                zombie.zombie.loadTexture('bossAttack', 0);
+                zombie.zombie.animations.add('attack1', [0]);
+                zombie.zombie.animations.play('attack1', 6, false);
+                zombie.zombie.animations.currentAnim.onComplete.add(function() {
+                    zombie.zombie.loadTexture('bossIdle', 0);
+                    zombie.zombie.animations.add('idle');
+                    zombie.zombie.animations.play('idle', 6, true);
                 }, this);
             }
 
@@ -379,8 +387,8 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             }
 
             function attackedEffect(theZombieAttackingPlayer) {
-              finalBoss.loadTexture('bossIdle', 0);
-              finalBoss.animations.play('idle', 6, true);
+              finalBoss.zombie.loadTexture('bossIdle', 0);
+              finalBoss.zombie.animations.play('idle', 6, true);
               PLAYER_CURRENT_HEALTH -= 20;
               drawHealthBarsNoArg();
               // 紅畫面，搖視角效果
