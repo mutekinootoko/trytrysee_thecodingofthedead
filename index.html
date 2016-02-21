@@ -23,7 +23,6 @@
                 boss: 'js/boss',
                 tutorial: 'js/tutorial',
                 creature: 'js/creature',
-                PlayGround: 'js/Playground',
                 Cookies: 'bower_components/js-cookie/src/js.cookie',
                 swal : 'bower_components/bootstrap-sweetalert/lib/sweet-alert.min',
                 ShortQuiz: 'js/ShortQuiz',
@@ -35,15 +34,12 @@
             }
         });
 
-        require( ["boot", "battle", "boss", "tutorial", "creature", "PlayGround", "ShortQuiz", "AceEditor"],
-            function(boot, battle, boss, tutorial, creature, PlayGround, ShortQuiz, AceEditor) {
+        require( ["boot", "battle", "boss", "tutorial", "creature", "ShortQuiz", "AceEditor"],
+            function(boot, battle, boss, tutorial, creature, ShortQuiz, AceEditor) {
                 //This function will be called when all the dependencies
                 //listed above are loaded. Note that this function could
                 //be called before the page is loaded.
                 //This callback is optional.
-
-               //playGround = new PlayGround.PlayGround($('#question-block'), $('#answer-block'));
-               playGround = new PlayGround.PlayGround($('#question-text'));
 
                //可調參數 start **************************************
                var gameWidth = 800;
