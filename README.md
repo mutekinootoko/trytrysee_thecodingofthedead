@@ -48,5 +48,18 @@ Please set browser window size to **1027x768** or above for best experiences.
 
 ## Credit
 
+### General Game  Art
+By our magnificent artist Max!!!!!
+
+### Animations
+* [Zombie](http://opengameart.org/content/zombie-animations)
+* [Golem](http://opengameart.org/content/golem-animations)
+* [Vampire](http://opengameart.org/content/vampire-animations)
+
+### Sound Effects
+* [Earthquake](http://mrclan.com/fastdl/tfc/sound/earthquake.wav)
+* [Explosion](http://www.freesfx.co.uk/soundeffects/fire_explosions/?p=2)
+* [Gunshot](http://www.findsounds.com/)
+
 ## License
 MIT for the code, and CC-BY for the art and music.
