@@ -10,7 +10,10 @@ A game to test your javascript ability.
 Type, Code, Kill and face the ultimate code judge system powered by IBM Bluemix® 
 
 ## Team members
-* Max
+* Max Chen ([github](https://github.com/MaxChen) ,[linkedin](https://tw.linkedin.com/in/maxnesto))
+  * UI/UX designer ([behance](https://www.behance.net/maxnesto))
+  * a iOS rookie
+  * AppCoda Chinese writer with Swift
 * Hai Feng ([github](https://github.com/haifengkao))
   * a iOS guru
   * iOS Challenge 2015 first place
