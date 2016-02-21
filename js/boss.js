@@ -147,11 +147,25 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
               finalBoss.say('Nice! Checking your code with the holy Bluemix ...');
               console.log('before sending to Bluemix runcode:' + runcode);
+
               $.ajax({
                 type: "POST",
                 url: BLUEMIX_JS_SANDBOX_SERVER_URL,
                 data: {'jscode':encodeURIComponent(runcode)},
-                dataType: 'json'
+                dataType: 'json',
+                timeout: 5000,
+                error: function(x, t, m) {
+                  // error handler
+                  finalBoss.say('Bluemix is not here, try again ... (error when loading service...)');
+                  if(bmerrorCount++ >= 2) {
+                    game.time.events.add(Phaser.Timer.SECOND , function() {
+                      finalBoss.say('Fine! I will let you pass!');
+                      game.time.events.add(Phaser.Timer.SECOND, function() {
+                        killBoss(finalBoss);
+                      }, this);
+                    }, this);
+                  }
+                }
               }).done(function(data) {
                 // {"result":"TimeoutError","console":[]}
                 // {"result":"null","console":[123]}
@@ -177,16 +191,6 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                   // wrong answer
                   finalBoss.say('WRONG! your code return ' + JSON.stringify(data.result) + ' with input ' + JSON.stringify(inputArray));
                   playerGetAttackByZombie(finalBoss);
-                }
-              }).fail(function() {
-                finalBoss.say('Bluemix is not here, try again ... (error when loading service...)');
-                if(++bmerrorCount >= 2) {
-                  game.time.events.add(Phaser.Timer.SECOND * 0.5, function() {
-                    finalBoss.say('Fine! I will let you pass!');
-                    game.time.events.add(Phaser.Timer.SECOND * 0.5, function() {
-                      killBoss(finalBoss);
-                    }, this);
-                  }, this);
                 }
               });
             }
@@ -288,7 +292,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
               //魔王關答案區打開
               bossAnswerDiv.hide();
               codeRunButton.hide();
-              
+
                 zombie.loadTexture('bossDie', 0);
                 zombie.animations.add('die');
                 zombie.animations.play('die', 7, false);
