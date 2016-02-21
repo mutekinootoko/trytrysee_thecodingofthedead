@@ -34,6 +34,9 @@ Please set browser window size to **1027x768** or above for best experiences.
 ### A full-sized badass Golem
 ![Boss](https://cloud.githubusercontent.com/assets/4080524/13202673/c305d6c2-d8dd-11e5-8b7d-ced3a8885358.jpg)
 
+### IBM Bluemix
+![Bluemix](https://cloud.githubusercontent.com/assets/4080524/13203382/c4fd64ae-d8f1-11e5-93dd-5df9a420c56f.jpg)
+
 ## Cheats
 
 
