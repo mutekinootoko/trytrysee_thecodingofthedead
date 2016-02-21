@@ -46,6 +46,23 @@ define(["creature"], function(creature){
 
             var bob = null;
 
+               // prevent backspace(delete) capture by firefox or chrome to 'go back'
+            this.handleBackspace = function(e) {
+                if (e.which === 8 && !$(e.target).is("input, textarea")) {
+                    e.preventDefault();
+                    console.log('press backspace');
+
+                    if(focusedZombie) {
+                        // keep 'Ans:'
+                        if(focusedZombie.ansTypeArea.text.length > ZOMBIE_ANSWER_TYPING_AEAR_PREFIX.length) {
+                            var ans = focusedZombie.ansTypeArea.text.substring(0, focusedZombie.ansTypeArea.text.length -1)
+                            focusedZombie.setAnsText(ans);
+                        }
+                    }
+                }
+            };
+
+
             this.preload = function(){
             };
 
