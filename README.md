@@ -38,7 +38,7 @@ Please set browser window size to **1027x768** or above for best experiences.
 ### A badass Golem
 ![Boss](https://cloud.githubusercontent.com/assets/4080524/13202673/c305d6c2-d8dd-11e5-8b7d-ced3a8885358.jpg)
 
-### IBM Bluemix
+### The ultimate code 'judging' system  Bluemix®
 ![Bluemix](https://cloud.githubusercontent.com/assets/4080524/13203382/c4fd64ae-d8f1-11e5-93dd-5df9a420c56f.jpg)
 
 ## Cheats
@@ -49,9 +49,10 @@ Correct code are actually in the comments, or remove all code and type **yo**. :
 
 ## Programming languages and Frameworks
 * Javascript
-* [Phaser](http://phaser.io/)
-* [ace](https://ace.c9.io/)
-* [Sandbox](https://github.com/gf3/sandbox)
+* [Phaser](http://phaser.io/), 2D game engine.
+* [ace](https://ace.c9.io/), code editor and syntax hilight.
+* [Sandbox](https://github.com/gf3/sandbox), execute javascript in node.js.
+* [IBM Bluemix®](http://www.ibm.com/cloud-computing/bluemix/), hosting node.js for executing javascript code player submit.
 
 ## Credit
 
