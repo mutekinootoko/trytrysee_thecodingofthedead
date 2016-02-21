@@ -335,6 +335,9 @@ define(["creature"], function(creature){
                                 break;
                             default:
                                 focusedZombie.ansTypeArea.text += char;
+
+                                var ans = zombieWaitingForAnswer.ansTypeArea.text + char;
+                                zombieWaitingForAnswer.setAnsText(ans);
                                 break;
                                 }
                     });
@@ -357,7 +360,7 @@ define(["creature"], function(creature){
             }
 
             function clearZombieAnsTypeArea(zombieToClearAns) {
-                zombieToClearAns.ansTypeArea.text = ZOMBIE_ANSWER_TYPING_AEAR_PREFIX;
+                zombieToClearAns.clearAnsText();
             }
 
             function getUrlVars(){
