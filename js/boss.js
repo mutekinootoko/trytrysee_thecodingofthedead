@@ -20,6 +20,8 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = "Ans:";
             //血格總數量
             var PLAYER_NUMBER_OF_HEALTH_BARS = 10;
+
+            var BLUEMIX_JS_SANDBOX_SERVER_URL = 'http://trytrysee.mybluemix.net/restful/bmsandbox';
             // 可調參數 end ************************************
 
             var isDebug;
@@ -37,8 +39,6 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
             var finalBoss = null;
             var shakeLoop = null; // for initial boss movement shaking
-            var explosionSound = null; // boss dying sound effect
-            var shakeSound = null; // earthquake sound effect to show boss
             var currentCodeQuestion; //目前做的題目
 
             // prevent backspace(delete) capture by firefox or chrome to 'go back'
@@ -64,8 +64,6 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             };
 
             this.create = function(){
-                shakeSound = game.add.audio('earthquake');
-                explosionSound = game.add.audio('explosion');
 
                 //魔王關答案區打開
                 bossAnswerDiv.show();
@@ -122,12 +120,11 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                       var foo = annotations[i];
                       if(foo.type !== "warning") {  // ignore warnings
                           alert('SYNTAX ERROR');
+                          playerGetAttackByZombie(finalBoss);
                           return;
                       }
                   }
               }
-              alert('not yet complete!');
-              return;
 
               // TODO check function name, function name must match
               var inputArray = codequestion.theinputArray;
@@ -136,50 +133,43 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
               var postfix = codequestion.getFunctionCallString();
               var runcode = aceeditorObj.getValue() + '\n' + postfix + ';';
-              var myInterpreter = new Interpreter(runcode);
-              myInterpreter.run(); // so far, following code only support run and return with string, array, number, boolean
 
-              var editorCodeOutput;
-              if(myInterpreter.value.type === 'string') {
-                  editorCodeOutput =  ('"' + myInterpreter.value.data + '"');
-              } else if(myInterpreter.value.type === 'object') {
-                  // assuming Array, string join with ','
-                  // not good, dirty...
-                  editorCodeOutput = myInterpreter.value.toString();
-              }  else if (myInterpreter.value.type === 'number') {
-                  editorCodeOutput = myInterpreter.value.data;
-              } else  if(myInterpreter.value.type === 'boolean') {
-                  editorCodeOutput = myInterpreter.value.data;
-              } else {
-                  // error handler.
-                  console.log('unexpected return type.');
-              }
-
-              var isSuccess;
-              if(expectedOutput instanceof Array ) {
-                  isSuccess = (expectedOutput.toString() === editorCodeOutput);
-              } else  {
-                  isSuccess = (expectedOutput === editorCodeOutput);
-              }
-
-              if(isSuccess) {
-                  // TODO code test success
-                  swal({
-                    title: "Game Finished",
-                    text: "You Win!",
-                    type: "info",
-                    confirmButtonText: "OK",
-                    cancelButtonText: "Cancel",
-                    closeOnCancel: true,
-                  }, function(isConfirm) {
-                  });
-                  playGround.player.sendLose();
-                  playGround.reset();
-              } else {
-                  // TODO code test fail
-              }
-
-              printResult(isSuccess, inputArray, expectedOutput, editorCodeOutput);
+              finalBoss.say('Nice! I\'m checking your code...');
+              console.log('before sending to Bluemix runcde:' + runcode);
+              $.ajax({
+                type: "POST",
+                url: BLUEMIX_JS_SANDBOX_SERVER_URL,
+                data: {'jscode':encodeURIComponent(runcode)},
+                dataType: 'json'
+              }).done(function(data) {
+                // {"result":"TimeoutError","console":[]}
+                // {"result":"null","console":[123]}
+                // {"result":"'SyntaxError: Unexpected token )'","console":[]}
+                console.log('return from bluemix ' + JSON.stringify(data));
+                if(data.result === 'TimeoutError') {
+                  // taking too long
+                  finalBoss.say('Your code takes too long to run! Shame!');
+                  playerGetAttackByZombie(finalBoss);
+                }  else if(data.result === 'null') {
+                  // return null!
+                  finalBoss.say('It returns NULL! LMAO!!!!');
+                  playerGetAttackByZombie(finalBoss);
+                } else if(data.result.indexOf('SyntaxError') > -1) {
+                  // sytax error
+                  finalBoss.say('The Code doesn\'t even compile.');
+                  playerGetAttackByZombie(finalBoss);
+                } else if (data.result === expectedOutput) {
+                  // answer is currect!
+                  finalBoss.say('aaaaaaaah~~~ BlueMix the Holy one, safe me~~~');
+                  killBoss(finalBoss);
+                } else {
+                  // wrong answer
+                  finalBoss.say('WRONG! your code return ' + JSON.stringify(data.result));
+                  playerGetAttackByZombie(finalBoss);
+                }
+              }).fail(function() {
+                finalBoss.say('BlueMix is not here, try again later...');
+              });
             }
 
             function characterRising() {
@@ -210,9 +200,6 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                     finalBoss = boss;
                     currentState = StateEnum.zombieMoving;
 
-                    // play(marker, position, volume, loop, forceRestart)
-                    shakeSound.play('', 0, 1.0, true);//loop
-
                     shakeScreen();
                     shakeLoop = game.time.events.loop(Phaser.Timer.SECOND*0.2, shakeScreen, this);
 
@@ -223,17 +210,6 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                             // remove shakeloop earlier, otherwise the screen will shake when the boss is on the ground
                             game.time.events.remove(shakeLoop);
                             shakeLoop = null;
-
-                            // stop the shaking sound gracefully
-                            game.time.events.loop(Phaser.Timer.SECOND * 0.1, function() {
-                                if (!shakeSound) {return;}
-                                if (shakeSound.volume <= 0.0) {
-                                    shakeSound.stop();
-                                    return;
-                                }
-                                shakeSound.volume -= 0.1;
-                            });
-
                         }
                     }
                     if (finalBoss.y > game.world.height - 300.0) {
@@ -263,9 +239,6 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             }
 
             function killBoss(zombie) {
-                if (explosionSound) {
-                    explosionSound.play();
-                }
                 zombie.loadTexture('bossDie', 0);
                 zombie.animations.add('die');
                 zombie.animations.play('die', 7, false);
@@ -274,6 +247,8 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
                     // move to next Stage
                     //game.state.start('battle');
+
+                    // TODO game over
 
                 }, this);
             }
@@ -304,7 +279,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
               finalBoss.animations.currentAnim.onComplete.add(function() {
                   finalBoss.animations.add('attack2', [3, 4, 5]);
                   finalBoss.animations.play('attack2', 6, false);
-                  attackedEffect(theZombieAttackingPlayer);
+                  attackedEffect(finalBoss);
               }, this);
 
 
