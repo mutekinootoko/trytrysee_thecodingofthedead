@@ -111,7 +111,7 @@ define(["creature"], function(creature){
 
                     }, this);
 
-                    zombie.reset(0.5*game.world.width, game.world.height - zombie.height - 50);
+                    zombie.reset(0.5*game.world.width, game.world.height - zombie.anchor.y*zombie.height - 50);
 
                     zombieGroup.bringToTop(zombie);
                     creature.zombieInit(game)(zombie);
