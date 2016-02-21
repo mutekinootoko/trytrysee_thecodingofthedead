@@ -48,6 +48,8 @@ define([], function(){
                 game.load.audio('zombieGrr10', ['assets/audio/zombie-10.mp3', 'assets/audio/zombie-10.ogg']);
                 game.load.audio('zombieGrr11', ['assets/audio/zombie-11.mp3', 'assets/audio/zombie-11.ogg']);
                 game.load.audio('zombieGrr15', ['assets/audio/zombie-15.mp3', 'assets/audio/zombie-15.ogg']);
+                game.load.audio('earthquake', ['assets/audio/earthquake.mp3', 'assets/audio/earthquake.ogg']);
+                game.load.audio('explosion', ['assets/audio/explosion.mp3', 'assets/audio/explosion.ogg']);
 
                 // gun shot
                 game.load.audio('gunshot', ['assets/audio/gunshot2.mp3', 'assets/audio/gunshot2.ogg']);
@@ -68,7 +70,6 @@ define([], function(){
                 game.load.spritesheet('bossDie', 'assets/bossSpriteSheet/bossDie.png', 456, 504, 7);
 
                 game.load.start();
-
             }
 
             this.shutdown = function(){
@@ -92,7 +93,9 @@ define([], function(){
             }
 
             function pressEnter() {
-                game.state.start('battle');
+                game.state.start('tutorial');
+                //game.state.start('battle');
+                //game.state.start('boss');
             }
         }
 

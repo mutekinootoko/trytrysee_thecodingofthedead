@@ -55,7 +55,8 @@ define(["creature"], function(creature){
                 zombieGrrsArray.push(game.add.audio('zombieGrr15'));
 
                 bgMusic = game.add.audio('bgmusic');
-                bgMusic.play('', 0, 1, true);//loop
+                // play(marker, position, volume, loop, forceRestart)
+                bgMusic.play('', 0, 0.2, true);//loop. Tune down the volume so that other sound effects could be heard
 
                 isDebug = getUrlVars()['debug'] === "1";
 
@@ -69,7 +70,6 @@ define(["creature"], function(creature){
 
                 //characterRising(); // Lono: I hate waiting
                 //game.time.events.loop(Phaser.Timer.SECOND*0.3 , characterRising, this);
-
             };
 
             this.update = function() {

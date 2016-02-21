@@ -42,11 +42,8 @@ body {
     bottom: 0;
 
     width: 800px;
-    height: 200px;
-    padding: 10px;
+    height: 145px;
     box-sizing: border-box;
-
-    background-color: #e7e7e7;
 }
 
 .boss-text {
@@ -55,7 +52,11 @@ body {
 }
 
 .boss-button {
-    float: right;
+    position: absolute;
+    right: 50px;
+    bottom: 10px;
+
+    width: 200px;
 
     font-size: 20px;
 }

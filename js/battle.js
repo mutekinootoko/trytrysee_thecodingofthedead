@@ -49,7 +49,6 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
             var healthBars; //血條 graphics 物件
             var hpText; // 血條前顯示字樣
             var PLAYER_CURRENT_HEALTH; //玩家血量
-            var bgMusic; // 背景音樂
             var zombieGrrsArray = []; //Array<audio> 殭屍叫聲, 這個不要放creature裡 @see zombieGrrrrr()
             var gunshot;
             var zombieCount; // dead zombie count
@@ -108,9 +107,6 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                 zombieGrrsArray.push(game.add.audio('zombieGrr15'));
 
                 gunshot = game.add.audio('gunshot')
-
-                bgMusic = game.add.audio('bgmusic');
-                bgMusic.play('', 0, 1, true);//loop
 
                 // pre-calculation
                 ZOMBIE_APPEARING_POSITISION_IN_X_POINT_FROM = Math.floor(game.world.width * ZOMBIE_APPEARING_POSITISION_IN_X_PERCENTAGE_FROM);
