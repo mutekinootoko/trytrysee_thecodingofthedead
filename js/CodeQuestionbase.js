@@ -1,4 +1,4 @@
-define(['CodeQuestion'], 
+define(['CodeQuestion'],
     function(CodeQuestion){
 
         var instance = null;
@@ -6,8 +6,8 @@ define(['CodeQuestion'],
         function CodeQuestionbase(){
             if(instance !== null){
                 throw new Error("Cannot instantiate more than one CodeQuestionbase, use CodeQuestionbase.getInstance()");
-            } 
-            
+            }
+
             this.initialize();
         }
 
@@ -15,18 +15,18 @@ define(['CodeQuestion'],
             initialize: function(){
                 // summary:
                 //      Initializes the singleton.
-                
+
                 this.counter = 0;
 
 
                 // define Questions here
                 this.questions = [];
 
-                // !!!! use " to quote to represent a string in string for input and output. 
+                // !!!! use " to quote to represent a string in string for input and output.
                 // eg: '"imstring"'
 
                 var q1 = new CodeQuestion.CodeQuestion(
-                    0, 
+                    0,
                     'Reverse a string.',
                     ['"abc"'],
                     '"cbd"',
@@ -35,7 +35,7 @@ define(['CodeQuestion'],
                 this.questions.push(q1);
 
                 var q2 = new CodeQuestion.CodeQuestion(
-                    1, 
+                    1,
                     'Write a program that returns all prime numbers between X(min) and Y(max) in an array in ascending order. eg: [2, 3, 5...]',
                     [2, 20],
                     [2, 3, 5, 7, 11, 13, 17, 19],
@@ -44,7 +44,7 @@ define(['CodeQuestion'],
                 this.questions.push(q2);
 
                 var q3 = new CodeQuestion.CodeQuestion(
-                    2, 
+                    2,
                     'Convert integers into roman numerals.',
                     [512],
                     '"DXII"',
@@ -54,13 +54,13 @@ define(['CodeQuestion'],
 
 
                 var q4 = new CodeQuestion.CodeQuestion(
-                    3, 
-                    'Reverse a string.',
+                    3,
+                    'Check for leap year.',
                     ['2000'],
                     true,
                     'function isLeap (yr) {\n\t/*if (yr > 1582) return !((yr % 4) || (!(yr % 100) && (yr % 400)));\n\tif (yr >= 0) return !(yr % 4);\n\tif (yr >= -45) return !((yr + 1) % 4);\n\treturn false;*/\n\treturn false;\n}',
                     'isLeap');
-                this.questions.push(q4);                
+                this.questions.push(q4);
             }
         };
 
@@ -70,12 +70,12 @@ define(['CodeQuestion'],
         */
         CodeQuestionbase.prototype.pickQuestion = function () {
             return this.questions[Math.floor(Math.random() * this.questions.length)];
-            
+
         };
 
         CodeQuestionbase.getInstance = function(){
             // summary:
-            //      Gets an instance of the singleton. It is better to use 
+            //      Gets an instance of the singleton. It is better to use
             if(instance === null){
                 instance = new CodeQuestionbase();
             }
