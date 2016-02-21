@@ -17,7 +17,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             //殭屍等待答案時間
             var ZOMBIE_SEC_TO_WAIT_FOR_ANSWER = 10;
             //殭屍答案打字區 prefix
-            var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = "Ans:";
+            var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = creature.ansPrefix;
             //血格總數量
             var PLAYER_NUMBER_OF_HEALTH_BARS = 10;
 
@@ -192,7 +192,11 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
                     zombieGroup.bringToTop(boss);
                     boss = creature.zombieInit(game)(boss);
-                    boss.dialogs = ["Impressive!", "But your journey ends here.", "Solve my quiz or prepare to die!"];
+                    boss.dialogs = ["Impressive!",
+                                    "But your journey ends here",
+                                    "You will never find Bluemix",
+                                    "Solve my quiz or prepare to die!"
+                                   ];
                     boss.movingStyle = creature.movingStyle.static;
 
                     boss.scale.setTo(1.5, 1.5);

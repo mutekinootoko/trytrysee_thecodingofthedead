@@ -10,12 +10,13 @@
 define([], function(){
 var MovingStyle = {"scale":1, "static":2};
 
+//殭屍答案打字區 prefix
+var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = "Ans:　";
+
 //boot場景，用來做一些遊戲啟動前的準備
 var zombieInit = function(game){
 var zombieFunc = function(zombie) {
 
-    //殭屍答案打字區 prefix
-    var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = "Ans:";
 
     zombie.inputEnabled = true;
     zombie.tint = 0xFFFFFF;
@@ -39,7 +40,7 @@ var zombieFunc = function(zombie) {
 
     var ansTextArea = game.make.text(0,
                                      0,
-                                     "System.out.println('_____');\nJUST TYPE HelloWorld",
+                                     "    function hello() {   \n        return('_____');    \n    }",
                                      { font: "15px Arial",
                                        fill: "#40FF00",
                                        wordWrap: false,
@@ -178,11 +179,13 @@ var zombieFunc = function(zombie) {
                 return -1;
             }
 
+            return zombie.nextDialogLine;
+
         } else {
             return -1; // no more dialogs
         }
 
-        return 0;
+        return -1;
     }
     zombie.showDialog = function() {
         var zombieToHilight = zombie;
@@ -198,6 +201,15 @@ var zombieFunc = function(zombie) {
         // show answer area
         zombieToHilight.ansTypeArea.alpha = 1.0;
         zombieToHilight.ansTextArea.alpha = 1.0;
+        //zombieToHilight.dialogArea.alpha = 1.0;
+    };
+    zombie.lolight = function() {
+        var zombieToHilight = zombie;
+        zombieToHilight.tint = 0xFFFFFF;
+
+        // show answer area
+        zombieToHilight.ansTypeArea.alpha = 0.0;
+        zombieToHilight.ansTextArea.alpha = 0.0;
         //zombieToHilight.dialogArea.alpha = 1.0;
     };
 
@@ -265,5 +277,6 @@ var zombieFunc = function(zombie) {
     return {
         zombieInit: zombieInit,
         movingStyle: MovingStyle,
+        ansPrefix: ZOMBIE_ANSWER_TYPING_AEAR_PREFIX
     };
 }); // define

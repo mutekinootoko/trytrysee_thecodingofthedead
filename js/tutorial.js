@@ -17,7 +17,7 @@ define(["creature"], function(creature){
             //殭屍等待答案時間
             var ZOMBIE_SEC_TO_WAIT_FOR_ANSWER = 10;
             //殭屍答案打字區 prefix
-            var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = "Ans:";
+            var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = creature.ansPrefix;
             //血格總數量
             var PLAYER_NUMBER_OF_HEALTH_BARS = 10;
             // 可調參數 end ************************************
@@ -31,7 +31,16 @@ define(["creature"], function(creature){
             var zombieGrrsArray = []; //Array<audio> 殭屍叫聲, 這個不要放creature裡 @see zombieGrrrrr()
             var zombieGroup;
 
-            var StateEnum = {"introductionBegin":1, "introductionEnd":2, "firstZombieBegin":3, "firstZombieEnd":4, "zombieMoving": 5, "introducting": 6};
+            var StateEnum = {"introductionBegin":1,
+                             "introductionEnd":2,
+                             "firstZombieBegin":3,
+                             "firstZombieEnd":4,
+                             "zombieMoving": 5,
+                             "introducting": 6,
+                             "lastDialogBegin": 7,
+                             "lastDialogEnd": 8,
+                             "lastDialogGoing": 9,
+                             };
             var currentState; // 目前的劇情進展
             var TypingEnum = {"off":0, "dialog":1, "answer":2};
 
@@ -119,9 +128,12 @@ define(["creature"], function(creature){
                                       "Our objective is to find the great Bluemix®",
                                       "Please turn on your speaker for the best experience",
                                       "Before you begin, I will test your brain power",
-                                      "My buddies will ask you some coding questions",
-                                      "Just type the answer and press the ENTER key",
-                                      "Hints can be found on the right panel",
+                                      "Please write a hello world function",
+                                      "Hint: type 'HelloWorld' and press the ENTER key", // number 6
+                                      "Good!               ",
+                                      "My buddies will ask you more",
+                                      "Hints can be found on the big gray right panel",
+                                      "or you can type 'yo' to bypass the quiz",
                                       "Watch for your HP at the top-left corner",
                                       "If you failed, Bluemix will be lost forever!",
                                       "Good Luck           "];
@@ -132,13 +144,13 @@ define(["creature"], function(creature){
                     focusedZombie = zombie;
 
                 } else if (currentState == StateEnum.introductionBegin) {
+                    currentState = StateEnum.introducting;
                     focusedZombie.showDialog();
                     focusedZombie.nextDialog();
                     typingMode(TypingEnum.dialog);
-                    currentState = StateEnum.introducting;
                 }else if (currentState == StateEnum.introductionEnd) {
                     focusedZombie.hilight();
-                    focusedZombie.startCountdown(ZOMBIE_SEC_TO_WAIT_FOR_ANSWER);
+                    //focusedZombie.startCountdown(ZOMBIE_SEC_TO_WAIT_FOR_ANSWER);
                     typingMode(TypingEnum.answer);
 
                     // first zombie
@@ -147,6 +159,11 @@ define(["creature"], function(creature){
                     // 註冊zombieAttack事件（signal, just like NSNotificationCenter）
                     focusedZombie.onAttackSignal.add(playerGetAttackByZombie, this);
                     // TODO 註冊zombieOnDeath 事件
+                } else if (currentState == StateEnum.lastDialogBegin) {
+                    currentState = StateEnum.lastDialogGoing;
+                    focusedZombie.showDialog();
+                    focusedZombie.nextDialog();
+                    typingMode(TypingEnum.dialog);
                 }
             }
 
@@ -267,15 +284,29 @@ define(["creature"], function(creature){
 
                 if (typingEnum == TypingEnum.off) {
                     game.input.keyboard.clearCaptures(); // this won't clear 'ESC' and 'backspace' registed somewhere else
-                } else if (typingEnum == TypingEnum.dialog) {
+                } else if (typingEnum == TypingEnum.dialog && currentState == StateEnum.introducting) {
+                    game.input.keyboard.addCallbacks(this, null, null, function(char) {
+                        if (!focusedZombie) { return; }
+                        console.log('dialog mode on and key pressed: ' + char + 'in ascii number:' + char.charCodeAt());
+
+                        var moreDialog = focusedZombie.nextDialog();
+                        console.log('dialog' + moreDialog);
+                        if (moreDialog >= 6 || moreDialog < 0) {
+                            // nothing to say, move to battle mode
+                            currentState = StateEnum.introductionEnd;
+                        }
+                    });
+                } else if (typingEnum == TypingEnum.dialog && currentState == StateEnum.lastDialogGoing) {
                     game.input.keyboard.addCallbacks(this, null, null, function(char) {
                         if (!focusedZombie) { return; }
                         console.log('dialog mode on and key pressed: ' + char + 'in ascii number:' + char.charCodeAt());
 
                         var moreDialog = focusedZombie.nextDialog();
                         if (moreDialog < 0) {
-                            // nothing to say, move to battle mode
-                            currentState = StateEnum.introductionEnd;
+                            currentState = StateEnum.lastDialogEnd;
+                            // nothing to say, move to the next state
+                            hideAZombie(focusedZombie);
+
                         }
                     });
                 } else if (typingEnum == TypingEnum.answer) {
@@ -291,7 +322,8 @@ define(["creature"], function(creature){
                                 // enter key
                                 if(checkAnswer(focusedZombie, focusedZombie.ansTypeArea.text, 'HelloWorld')) {
                                   // zombie die!
-                                  hideAZombie(focusedZombie);
+                                  currentState = StateEnum.lastDialogBegin;
+                                  focusedZombie.lolight();
                                 } else {
                                   // player damaged
                                   clearZombieAnsTypeArea(focusedZombie);
