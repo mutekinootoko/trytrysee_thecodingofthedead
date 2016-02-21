@@ -290,7 +290,6 @@ define(["creature"], function(creature){
                         console.log('dialog mode on and key pressed: ' + char + 'in ascii number:' + char.charCodeAt());
 
                         var moreDialog = focusedZombie.nextDialog();
-                        console.log('dialog' + moreDialog);
                         if (moreDialog >= 6 || moreDialog < 0) {
                             // nothing to say, move to battle mode
                             currentState = StateEnum.introductionEnd;
