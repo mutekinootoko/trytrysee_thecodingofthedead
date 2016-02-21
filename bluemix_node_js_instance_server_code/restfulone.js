@@ -16,7 +16,7 @@ app.post('/bmsandbox', function(req, res) {
   console.log('bmsandbox call from:' + req.ip + ' with body:' + JSON.stringify(req.body));
 
   var sb  = new Sandbox();
-  sb.run(req.body.jscode, function(output) {
+  sb.run(unescape(req.body.jscode), function(output) {
   //sb.run( "(function(name) { return 'Hi there, ' + name + '!'; })('Fabio')", function(output) {
     console.log('call from ' + req.ip + ' outputs:' + JSON.stringify(output));
     res.json(output);
