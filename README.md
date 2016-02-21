@@ -14,6 +14,7 @@ Type, Code, Kill zombies then face the ultimate code judging system powered by [
   * UI/UX designer ([behance](https://www.behance.net/maxnesto))
   * an iOS rookie
   * AppCoda Chinese writer with Swift
+  * wrote the server side node.js code on Bluemix
 
 * Hai Feng ([github](https://github.com/haifengkao))
   * an iOS guru
