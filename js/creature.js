@@ -17,6 +17,7 @@ var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = "Ans:　";
 var zombieInit = function(game){
 var zombieFunc = function(zombie) {
 
+    var ansAreaBackgroundColor =  '#000000';
 
     zombie.inputEnabled = true;
     zombie.tint = 0xFFFFFF;
@@ -40,12 +41,12 @@ var zombieFunc = function(zombie) {
 
     var ansTextArea = game.make.text(0,
                                      0,
-                                     "    function hello() {   \n        return('_____');    \n    }",
+                                     "function hello() {\n    return('_____');\n}",
                                      { font: "15px Arial",
                                        fill: "#40FF00",
                                        wordWrap: false,
                                        align: "left",
-                                       backgroundColor: "#1C1C1C"
+                                       backgroundColor: ansAreaBackgroundColor
                                      });
     ansTextArea.anchor.set(0.5, 0.5);
 
@@ -64,7 +65,7 @@ var zombieFunc = function(zombie) {
                                        fill: "#F7FE2E",
                                        wordWrap: false,
                                        align: "left",
-                                       backgroundColor: "#1C1C1C"
+                                       backgroundColor: ansAreaBackgroundColor
                                      });
     //ansTypeArea.anchor.set(0.5, 0.5);
     // hide all dialogs
@@ -84,7 +85,8 @@ var zombieFunc = function(zombie) {
     zombie.ansTypeArea.x = zombie.ansTextArea.left;
     zombie.ansTypeArea.y = zombie.ansTextArea.bottom;
 
-
+    updateTextArea(zombie);
+    zombie.textArea.alpha = 0.0;
     // zombie's short quiz
     zombie.shortQuiz // ShortQuiz object
 
@@ -100,6 +102,7 @@ var zombieFunc = function(zombie) {
       zombie.onDeathSignal.removeAll();
       zombie.ansTypeArea.alpha = 0.0;
       zombie.ansTextArea.alpha = 0.0;
+      zombie.textArea.alpha = 0.0;
       zombie.dialogArea.alpha = 0.0;
       zombie.timeCountdownArea.alpha = 0;
     }
@@ -113,6 +116,27 @@ var zombieFunc = function(zombie) {
       zombie.kill();
     }
 
+    zombie.setAnsText = function (text){
+        var oldText = zombie.ansTypeArea.text;
+        zombie.ansTypeArea.text = text;
+
+        if (zombie.ansTypeArea.width > zombie.ansTextArea.width){
+            zombie.ansTypeArea.text = oldText;
+        }
+        zombie.updateAnsText();
+    }
+
+    zombie.clearAnsText = function (){
+       zombie.ansTypeArea.text = ZOMBIE_ANSWER_TYPING_AEAR_PREFIX;
+       zombie.updateTextArea();
+    }
+
+    zombie.updateAnsText = function () {
+      zombie.ansTypeArea.x = zombie.ansTextArea.left;
+      zombie.ansTypeArea.y = zombie.ansTextArea.bottom;
+      zombie.updateTextArea();
+    }
+
     /**
       *  @param shortQuiz : ShortQuiz -
       */
@@ -121,6 +145,7 @@ var zombieFunc = function(zombie) {
       zombie.ansTextArea.text = shortQuiz.quizAnswerWithBlankToFill;
       zombie.ansTypeArea.x = zombie.ansTextArea.left;
       zombie.ansTypeArea.y = zombie.ansTextArea.bottom;
+      zombie.updateTextArea();
     }
 
     zombie.getShortQuizAnswer = function() {
@@ -215,8 +240,10 @@ var zombieFunc = function(zombie) {
         // show answer area
         zombieToHilight.ansTypeArea.alpha = 1.0;
         zombieToHilight.ansTextArea.alpha = 1.0;
+        zombieToHilight.textArea.alpha = 1.0;
         //zombieToHilight.dialogArea.alpha = 1.0;
     };
+
     zombie.lolight = function() {
         var zombieToHilight = zombie;
         zombieToHilight.tint = 0xFFFFFF;
@@ -224,8 +251,61 @@ var zombieFunc = function(zombie) {
         // show answer area
         zombieToHilight.ansTypeArea.alpha = 0.0;
         zombieToHilight.ansTextArea.alpha = 0.0;
+        zombieToHilight.textArea.alpha = 0.0;
         //zombieToHilight.dialogArea.alpha = 1.0;
     };
+
+    zombie.updateTextArea = function(){
+        updateTextArea(zombie);
+    }
+
+    function updateTextArea(aZombie){
+        var ansTypeArea = aZombie.ansTypeArea;
+        var ansTextArea = aZombie.ansTextArea;
+        var sprite = makeRectangle(ansTextArea.width, ansTypeArea.height+ansTextArea.height);
+
+        var oldAlpha = 1.0;
+        if (aZombie.textArea) {
+            oldAlpha = aZombie.textArea.alpha; // preserve alpha setting
+            aZombie.textArea.destroy();
+        }
+
+        if (sprite) {
+            sprite.anchor.set(0.5);
+            sprite.left = ansTextArea.left;
+            sprite.top = ansTextArea.top;
+            sprite.y += 10.0; // why?
+            aZombie.addChild(sprite)
+            aZombie.removeChild(ansTypeArea)
+            aZombie.removeChild(ansTextArea)
+            aZombie.addChild(ansTypeArea)
+            aZombie.addChild(ansTextArea)
+            aZombie.textArea = sprite;
+            aZombie.textArea.alpha = oldAlpha;
+        }
+
+
+    }
+    function makeRectangle(width, height){
+        width += 20.0;
+        height += 20.0;
+        var stroke = 2.0;
+        var bmd = game.make.bitmapData(width, height);
+
+        bmd.ctx.beginPath();
+        bmd.ctx.rect(0, 0, width, height);
+        bmd.ctx.fillStyle = '#40FF00';
+        bmd.ctx.fill();
+        bmd.ctx.closePath();
+        bmd.ctx.beginPath();
+        bmd.ctx.rect(stroke, stroke, width-2*stroke, height-2*stroke);
+        bmd.ctx.fillStyle = ansAreaBackgroundColor;
+        bmd.ctx.fill();
+        bmd.ctx.closePath();
+
+        sprite = game.make.sprite(0, 0, bmd);
+        return sprite;
+    }
 
     //zombie.de_hilightAllZombie = function() {
         //zombie.tint = 0xFFFFFF;

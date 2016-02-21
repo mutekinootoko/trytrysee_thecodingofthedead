@@ -290,7 +290,6 @@ define(["creature"], function(creature){
                         console.log('dialog mode on and key pressed: ' + char + 'in ascii number:' + char.charCodeAt());
 
                         var moreDialog = focusedZombie.nextDialog();
-                        console.log('dialog' + moreDialog);
                         if (moreDialog >= 6 || moreDialog < 0) {
                             // nothing to say, move to battle mode
                             currentState = StateEnum.introductionEnd;
@@ -335,6 +334,9 @@ define(["creature"], function(creature){
                                 break;
                             default:
                                 focusedZombie.ansTypeArea.text += char;
+
+                                var ans = zombieWaitingForAnswer.ansTypeArea.text + char;
+                                zombieWaitingForAnswer.setAnsText(ans);
                                 break;
                                 }
                     });
@@ -357,7 +359,7 @@ define(["creature"], function(creature){
             }
 
             function clearZombieAnsTypeArea(zombieToClearAns) {
-                zombieToClearAns.ansTypeArea.text = ZOMBIE_ANSWER_TYPING_AEAR_PREFIX;
+                zombieToClearAns.clearAnsText();
             }
 
             function getUrlVars(){

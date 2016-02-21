@@ -63,18 +63,18 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
 
             // prevent backspace(delete) capture by firefox or chrome to 'go back'
             this.handleBackspace = function(e) {
-              if (e.which === 8 && !$(e.target).is("input, textarea")) {
-                e.preventDefault();
-                console.log('press backspace');
+                if (e.which === 8 && !$(e.target).is("input, textarea")) {
+                    e.preventDefault();
+                    console.log('press backspace');
 
-                if(isAnyZombieWaitingForAnswer()) {
-                  // keep 'Ans:'
-                  if(zombieWaitingForAnswer.ansTypeArea.text.length > ZOMBIE_ANSWER_TYPING_AEAR_PREFIX.length) {
-                    zombieWaitingForAnswer.ansTypeArea.text = zombieWaitingForAnswer.ansTypeArea.text.substring(0, zombieWaitingForAnswer.ansTypeArea.text.length -1)
-                  }
+                    if(isAnyZombieWaitingForAnswer()) {
+                        // keep 'Ans:'
+                        if(zombieWaitingForAnswer.ansTypeArea.text.length > ZOMBIE_ANSWER_TYPING_AEAR_PREFIX.length) {
+                            var ans = zombieWaitingForAnswer.ansTypeArea.text.substring(0, zombieWaitingForAnswer.ansTypeArea.text.length -1)
+                            zombieWaitingForAnswer.setAnsText(ans);
+                        }
+                    }
                 }
-
-              }
             };
 
             this.preload = function(){
@@ -275,7 +275,7 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                     randomOffset = -randomOffset;
                 }
 
-                var t = 4.0; // this value controls how big the offset is. the larger the value, the bigger offset
+                var t = 3.0; // this value controls how big the offset is. the larger the value, the bigger offset
 
                 // Lono: fix accerleration, find a velocity that can move zombie to middle of screen
                 // v0t + 0.5*a*t^2 = x
@@ -515,7 +515,8 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                             default:
                                 playerAttack(zombieWaitingForAnswer);
 
-                                zombieWaitingForAnswer.ansTypeArea.text += char;
+                                var ans = zombieWaitingForAnswer.ansTypeArea.text + char;
+                                zombieWaitingForAnswer.setAnsText(ans);
                                 break;
                                 }
                     });
@@ -539,7 +540,7 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
             }
 
             function clearZombieAnsTypeArea(zombieToClearAns) {
-                zombieToClearAns.ansTypeArea.text = ZOMBIE_ANSWER_TYPING_AEAR_PREFIX;
+                zombieToClearAns.clearAnsText();
             }
 
             function getUrlVars(){
