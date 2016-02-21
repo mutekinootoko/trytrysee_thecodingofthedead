@@ -202,7 +202,11 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
                     zombieGroup.bringToTop(boss);
                     boss = creature.zombieInit(game)(boss);
-                    boss.dialogs = ["Impressive!", "But your journey ends here.", "Solve my quiz or prepare to die!"];
+                    boss.dialogs = ["Impressive!",
+                                    "But your journey ends here",
+                                    "You will never find Bluemix",
+                                    "Solve my quiz or prepare to die!"
+                                   ];
                     boss.movingStyle = creature.movingStyle.static;
 
                     boss.scale.setTo(1.5, 1.5);
