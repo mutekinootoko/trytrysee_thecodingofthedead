@@ -128,11 +128,11 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
               }
 
               // TODO check function name, function name must match
-              var inputArray = codequestion.theinputArray;
-              var functionName = codequestion.functionName;
-              var expectedOutput = codequestion.expectedOutput;
+              var inputArray = currentCodeQuestion.theinputArray;
+              var functionName = currentCodeQuestion.functionName;
+              var expectedOutput = currentCodeQuestion.expectedOutput;
 
-              var postfix = codequestion.getFunctionCallString();
+              var postfix = currentCodeQuestion.getFunctionCallString();
               var runcode = aceeditorObj.getValue() + '\n' + postfix + ';';
 
               finalBoss.say('Nice! I\'m checking your code...');
