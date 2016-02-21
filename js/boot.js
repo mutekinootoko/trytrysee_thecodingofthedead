@@ -48,6 +48,7 @@ define([], function(){
                 game.load.audio('zombieGrr10', ['assets/audio/zombie-10.mp3', 'assets/audio/zombie-10.ogg']);
                 game.load.audio('zombieGrr11', ['assets/audio/zombie-11.mp3', 'assets/audio/zombie-11.ogg']);
                 game.load.audio('zombieGrr15', ['assets/audio/zombie-15.mp3', 'assets/audio/zombie-15.ogg']);
+                game.load.audio('earthquake', ['assets/audio/earthquake.mp3', 'assets/audio/earthquake.ogg']);
 
                 // gun shot
                 game.load.audio('gunshot', ['assets/audio/gunshot2.mp3', 'assets/audio/gunshot2.ogg']);

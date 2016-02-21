@@ -55,7 +55,8 @@ define(["creature"], function(creature){
                 zombieGrrsArray.push(game.add.audio('zombieGrr15'));
 
                 bgMusic = game.add.audio('bgmusic');
-                bgMusic.play('', 0, 1, true);//loop
+                // play(marker, position, volume, loop, forceRestart)
+                bgMusic.play('', 0, 0.4, true);//loop. Tune down the volume so that other sound effects could be heard
 
                 isDebug = getUrlVars()['debug'] === "1";
 
