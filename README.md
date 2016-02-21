@@ -2,28 +2,32 @@
 ![Splash](https://cloud.githubusercontent.com/assets/4080524/13202495/bbe2b4ba-d8d7-11e5-9df3-96a0a3e96740.jpg)
 
 ## How to run
-TODO: koding's ip address
+[Click here to run](http://169.44.56.42/trytrysee/index.html)
 
 ## Description
+A HTML5 game tests your Javascript coding ability.
+Type, Code, Kill zombies then face the ultimate code judging system powered by [IBM Bluemix®](http://www.ibm.com/cloud-computing/bluemix/).
 
-A game to test your javascript ability.
-Type, Code, Kill and face the ultimate code judge system powered by IBM Bluemix® 
+## Team : Try Try See (試試看)
+### Members
+* Max Chen ([github](https://github.com/MaxChen) ,[linkedin](https://tw.linkedin.com/in/maxnesto))
+  * UI/UX designer ([behance](https://www.behance.net/maxnesto))
+  * an iOS rookie
+  * AppCoda Chinese writer with Swift
+  * wrote the server side node.js code on Bluemix
 
-## Team members
-* Max
 * Hai Feng ([github](https://github.com/haifengkao))
-  * a iOS guru
+  * an iOS guru
   * iOS Challenge 2015 first place
   * Objective-C with love
-   
-* Marku ([github](https://github.com/mutekinootoko), [about.me](https://about.me/mutekinootoko))
-  * *A Coder*
+
+* Marku ([github](https://github.com/mutekinootoko), [about.me](https://about.me/mutekinootoko), [linkedin](https://www.linkedin.com/in/marku-hao-yu-lee-9a725536))
+  * Coder, I make things work.
   * LLAP
 
 ## Supported browsers
 * Firefox
 * Chrome
-* Safari
 
 Please set browser window size to **1027x768** or above for best experiences.
 
@@ -31,30 +35,33 @@ Please set browser window size to **1027x768** or above for best experiences.
 ### Swarm of zombies
 ![Zombies](https://cloud.githubusercontent.com/assets/4080524/13202693/57961f04-d8de-11e5-988e-09a7234173a7.jpg)
 
-### A full-sized badass Golem
+### A badass Golem
 ![Boss](https://cloud.githubusercontent.com/assets/4080524/13202673/c305d6c2-d8dd-11e5-8b7d-ced3a8885358.jpg)
 
-### IBM Bluemix
+### The ultimate code 'judging' system  Bluemix®
 ![Bluemix](https://cloud.githubusercontent.com/assets/4080524/13203382/c4fd64ae-d8f1-11e5-93dd-5df9a420c56f.jpg)
 
 ## Cheats
-
+### Zombies
+Answer **yo** to cheat.
+### Golem
+Correct code are actually in the comments, or remove all code and type **yo**. :D
 
 ## Programming languages and Frameworks
 * Javascript
-* [Phaser](http://phaser.io/)
-* [ace](https://ace.c9.io/)
-* [JS-Interpreter](https://github.com/NeilFraser/JS-Interpreter)
+* [Phaser](http://phaser.io/), 2D game engine.
+* [ace](https://ace.c9.io/), code editor and syntax hilight.
+* [Sandbox](https://github.com/gf3/sandbox), execute javascript in node.js.
+* [IBM Bluemix®](http://www.ibm.com/cloud-computing/bluemix/), hosting node.js for executing javascript code player submit.
 
 ## Credit
 
 ### General Game  Art
-By our magnificent artist Max!!!!!
+By our magnificent artist Max.
 
 ### Animations
 * [Zombie](http://opengameart.org/content/zombie-animations)
 * [Golem](http://opengameart.org/content/golem-animations)
-* [Vampire](http://opengameart.org/content/vampire-animations)
 
 ### Sound Effects
 * [Earthquake](http://mrclan.com/fastdl/tfc/sound/earthquake.wav)

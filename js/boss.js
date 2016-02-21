@@ -9,13 +9,13 @@
 define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
     //boot場景，用來做一些遊戲啟動前的準備
-    var bossStage = function(game, bossAnswerDiv, aceeditorObj, questionTextArea){
+    var bossStage = function(game, bossAnswerDiv, aceeditorObj, questionTextArea, codeRunButton){
         var func = function() {
 
             //可調參數 start **************************************
 
             //殭屍等待答案時間
-            var ZOMBIE_SEC_TO_WAIT_FOR_ANSWER = 10;
+            var ZOMBIE_SEC_TO_WAIT_FOR_ANSWER = 11;
             //殭屍答案打字區 prefix
             var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = creature.ansPrefix;
             //血格總數量
@@ -40,6 +40,8 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             var finalBoss = null;
             var shakeLoop = null; // for initial boss movement shaking
             var currentCodeQuestion; //目前做的題目
+            // 讀取bluemix錯誤計數
+            var bmerrorCount;
 
             // prevent backspace(delete) capture by firefox or chrome to 'go back'
             this.handleBackspace = function(e) {
@@ -65,10 +67,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
             this.create = function(){
 
-                //魔王關答案區打開
-                bossAnswerDiv.show();
-                //Run按鈕加上event
-                bossAnswerDiv.find('input').click(runEditorCode);
+                bmerrorCount = 0;
 
                 game.physics.startSystem(Phaser.Physics.ARCADE);
                 game.add.tileSprite(-250, -150, 1250, 950, 'gameBg');
@@ -113,13 +112,21 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
               * check code in ace
               */
             function runEditorCode() {
+
+              if(aceeditorObj.getValue() === 'yo') {
+                // cheat
+                finalBoss.say('aaaaaaaah~~~ Bluemix the Holy one, save me~~~');
+                killBoss(finalBoss);
+                return;
+              }
+
               // check syntax first
               var annotations = aceeditorObj.getSession().getAnnotations()
               if(annotations.length > 0) {
                   for(var i = 0; i < annotations.length; i++) {
                       var foo = annotations[i];
                       if(foo.type !== "warning") {  // ignore warnings
-                          alert('SYNTAX ERROR');
+                          finalBoss.say('The Code doesn\'t even compile.');
                           playerGetAttackByZombie(finalBoss);
                           return;
                       }
@@ -127,15 +134,15 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
               }
 
               // TODO check function name, function name must match
-              var inputArray = codequestion.theinputArray;
-              var functionName = codequestion.functionName;
-              var expectedOutput = codequestion.expectedOutput;
+              var inputArray = currentCodeQuestion.theinputArray;
+              var functionName = currentCodeQuestion.functionName;
+              var expectedOutput = currentCodeQuestion.expectedOutput;
 
-              var postfix = codequestion.getFunctionCallString();
+              var postfix = currentCodeQuestion.getFunctionCallString();
               var runcode = aceeditorObj.getValue() + '\n' + postfix + ';';
 
-              finalBoss.say('Nice! I\'m checking your code...');
-              console.log('before sending to Bluemix runcde:' + runcode);
+              finalBoss.say('Nice! Checking your code with the holy Bluemix ...');
+              console.log('before sending to Bluemix runcode:' + runcode);
               $.ajax({
                 type: "POST",
                 url: BLUEMIX_JS_SANDBOX_SERVER_URL,
@@ -158,17 +165,25 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                   // sytax error
                   finalBoss.say('The Code doesn\'t even compile.');
                   playerGetAttackByZombie(finalBoss);
-                } else if (data.result === expectedOutput) {
+                } else if (JSON.stringify(data.result) === JSON.stringify(expectedOutput)) {
                   // answer is currect!
-                  finalBoss.say('aaaaaaaah~~~ BlueMix the Holy one, safe me~~~');
+                  finalBoss.say('aaaaaaaah~~~ Bluemix the Holy one, save me~~~');
                   killBoss(finalBoss);
                 } else {
                   // wrong answer
-                  finalBoss.say('WRONG! your code return ' + JSON.stringify(data.result));
+                  finalBoss.say('WRONG! your code return ' + JSON.stringify(data.result) + ' with input ' + JSON.stringify(inputArray));
                   playerGetAttackByZombie(finalBoss);
                 }
               }).fail(function() {
-                finalBoss.say('BlueMix is not here, try again later...');
+                finalBoss.say('Bluemix is not here, try again ... (error when loading service...)');
+                if(++bmerrorCount >= 2) {
+                  game.time.events.add(Phaser.Timer.SECOND * 0.5, function() {
+                    finalBoss.say('Fine! I will let you pass!');
+                    game.time.events.add(Phaser.Timer.SECOND * 0.5, function() {
+                      killBoss(finalBoss);
+                    }, this);
+                  }, this);
+                }
               });
             }
 
@@ -192,10 +207,10 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
                     zombieGroup.bringToTop(boss);
                     boss = creature.zombieInit(game)(boss);
-                    boss.dialogs = ["Impressive!",
-                                    "But your journey ends here",
-                                    "You will never find Bluemix",
-                                    "Solve my quiz or prepare to die!"
+                    boss.dialogs = ["Impressive, human!",
+                                    "But your journey ends here.",
+                                    "The Bluemix only meet the smart one.",
+                                    "Solve my quiz or be gone!"
                                    ];
                     boss.movingStyle = creature.movingStyle.static;
 
@@ -229,6 +244,12 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                     currentCodeQuestion = CodeQuestionbase.pickQuestion();
                     questionTextArea.html(currentCodeQuestion.question);
                     aceeditorObj.setValue(currentCodeQuestion.codeTemplate, -1);
+
+                    //魔王關答案區打開
+                    bossAnswerDiv.show();
+                    codeRunButton.show();
+                    //Run按鈕加上event
+                    codeRunButton.click(runEditorCode);
 
                     finalBoss.startCountdown(ZOMBIE_SEC_TO_WAIT_FOR_ANSWER);
                     typingMode(TypingEnum.answer);

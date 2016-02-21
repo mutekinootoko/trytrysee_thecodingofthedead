@@ -68,7 +68,7 @@
 
                 var editor = AceEditor.initAce();
 
-                game.States.boss = boss.boss(game, $('#bossAnswer'), editor, $('#question-text'));
+                game.States.boss = boss.boss(game, $('#bossAnswer'), editor, $('#question-text'), $('#bossAnswerSubmitButton'));
 
                 $(document).on("keydown", function (e) {
                     battleObj.handleBackspace(e);
@@ -94,7 +94,7 @@
 <pre id="editor" class="boss-text">
 // write your code here
 </pre>
-              
+
            </div>
            <div id="tts"></div>
          </div>
@@ -102,7 +102,7 @@
            <!-- 題目這邊-->
            <div class="question-text" id="question-text">
            </div>
-           <input id="bossAnswerSubmitButton" type="submit" value="RUN" class="boss-button">
+           <input id="bossAnswerSubmitButton" style="display:none;" type="submit" value="RUN" class="boss-button">
          </div>
        </div>
 
