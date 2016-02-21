@@ -93,7 +93,9 @@ define([], function(){
             }
 
             function pressEnter() {
-                game.state.start('battle');
+                game.state.start('tutorial');
+                //game.state.start('battle');
+                //game.state.start('boss');
             }
         }
 
