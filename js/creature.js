@@ -169,6 +169,14 @@ var zombieFunc = function(zombie) {
       }
     }
 
+    zombie.say = function (str) {
+        if (str) {
+            var dialogArea = zombie.dialogArea;
+            dialogArea.text = str;
+            dialogArea.x = -dialogArea.width + 10;
+        }
+    }
+
     zombie.nextDialog = function () {
         if (zombie.dialogs) {
             if (!zombie.nextDialogLine) {
