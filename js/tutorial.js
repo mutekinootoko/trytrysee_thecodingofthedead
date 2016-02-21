@@ -118,7 +118,7 @@ define(["creature"], function(creature){
                     zombie.dialogs = ["Welcome to Hell", "Our objective is to change the world!", "please write a hello world function"];
                     zombie.movingStyle = creature.movingStyle.static;
 
-                    zombie.scale.setTo(1.5, 1.5);
+                    zombie.scale.setTo(1.3, 1.3);
 
                     focusedZombie = zombie;
 
