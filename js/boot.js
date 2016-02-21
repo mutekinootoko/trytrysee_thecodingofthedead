@@ -10,7 +10,7 @@ define([], function(){
     var boot = function(game){
         var func = function() {
             this.preload = function(){
-                game.load.image('loading','StartView.jpg'); //載入進度條圖片資源
+                game.load.image('loading','assets/StartView.jpg'); //載入進度條圖片資源
             };
 
             this.create = function(){

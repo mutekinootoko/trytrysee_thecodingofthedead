@@ -11,7 +11,7 @@
         <script src="bower_components/requirejs/require.js"></script>
 
         <script type="text/javascript">
-        
+
         var playGround = null;
 
         requirejs.config({
@@ -20,20 +20,22 @@
                 boot: 'js/boot',
                 battle: 'js/battle',
                 boss: 'js/boss',
+                tutorial: 'js/tutorial',
                 creature: 'js/creature',
                 PlayGround: 'js/PlayGround',
                 Cookies: 'bower_components/js-cookie/src/js.cookie',
                 swal : 'bower_components/bootstrap-sweetalert/lib/sweet-alert.min',
+                ShortQuiz: 'js/ShortQuiz',
             }
         });
 
-        require( ["boot", "battle", "boss", "creature", "PlayGround"],
-            function(boot, battle, boss, creature, PlayGround) {
+        require( ["boot", "battle", "boss", "tutorial", "creature", "PlayGround", "ShortQuiz"],
+            function(boot, battle, boss, tutorial, creature, PlayGround, ShortQuiz) {
                 //This function will be called when all the dependencies
                 //listed above are loaded. Note that this function could
                 //be called before the page is loaded.
                 //This callback is optional.
-               
+
                //playGround = new PlayGround.PlayGround($('#question-block'), $('#answer-block'));
                playGround = new PlayGround.PlayGround($('#question-text'));
 
@@ -56,22 +58,23 @@
                 game.States = {}; //創建一個對象來存放要用到的state
 
                 //boot場景，用來做一些遊戲啟動前的準備
-                game.States.boot = boot.boot(game);        
-                var battleObj = new battle.battle(game)();
+                game.States.boot = boot.boot(game);
+                var battleObj = new battle.battle(game, $('#question-text'))();
                 game.States.battle = battleObj;
 
+                game.States.tutorial = tutorial.tutorial(game);
                 game.States.boss = boss.boss(game);
 
                 $(document).on("keydown", function (e) {
                     battleObj.handleBackspace(e);
                 });
-                
+
 
                 //把定義好的場景添加到遊戲中
                 game.state.add('boot', game.States.boot);
                 game.state.add('battle', game.States.battle);
                 game.state.add('boss', game.States.boss);
-                
+                game.state.add('tutorial', game.States.tutorial);
                 game.state.start('boot');
             }
         );
@@ -80,8 +83,8 @@
        <div class="container">
          <div class="gameview"id="tts"></div>
          <div class="question-block" id="question-block">
+           <!-- 題目這邊-->
            <div class="question-text" id="question-text">
-             我是題目，我也是題目，還是題目。我是題目，我也是題目，還是題目。我是題目，我也是題目，還是題目。我是題目，我也是題目，還是題目。我是題目，我也是題目，還是題目。我是題目，我也是題目，還是題目。我是題目，我也是題目，還是題目。
            </div>
          </div>
        </div>

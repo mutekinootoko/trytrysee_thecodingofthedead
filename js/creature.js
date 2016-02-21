@@ -26,15 +26,16 @@ var zombieFunc = function(zombie) {
     //zombie.events.onInputOut.add(zombieMouseHoverOut, this);
 
     var dialogArea = game.make.text(0,
-                                     0,
+                                     -zombie.height*zombie.anchor.y + 0.3*zombie.height,
                                      "",
-                                     { font: "15px Arial",
+                                     { font: "22px Arial",
                                         fill: "#FFFFFF",
-                                        wordWrap: false,
+                                        wordWrap: true,
                                         align: "left",
-                                        backgroundColor: "#1C1C1C"
+                                        //backgroundColor: "#1C1C1C"
                                      });
-    dialogArea.x = - dialogArea.width + 10;
+    dialogArea.anchor.set(0.4, 1.0);
+    dialogArea.wordWrapWidth = 200.0;
 
     var timeCountdownArea = game.make.text(0, 50,
                                             "",
@@ -45,14 +46,15 @@ var zombieFunc = function(zombie) {
                                               backgroundColor: "#1C1C1C"
                                             });
     var ansTextArea = game.make.text(0,
-                                     100,
+                                     0,
                                      "System.out.println('_____');\nJUST TYPE HelloWorld",
-                                     { font: "15px Arial",
+                                     { font: "22px Arial",
                                        fill: "#40FF00",
                                        wordWrap: false,
                                        align: "left",
                                        backgroundColor: "#1C1C1C"
                                      });
+    ansTextArea.anchor.set(0.5, 0.5);
     var ansTypeArea = game.make.text(0, 150,
                                      ZOMBIE_ANSWER_TYPING_AEAR_PREFIX,
                                      { font: "15px Arial",
@@ -74,6 +76,9 @@ var zombieFunc = function(zombie) {
     zombie.ansTypeArea = ansTypeArea;
     zombie.dialogArea = dialogArea;
     zombie.timeCountdownArea = timeCountdownArea;
+
+    // zombie's short quiz
+    zombie.shortQuiz // ShortQuiz object
 
     // signal區
     zombie.onAttackSignal = new Phaser.Signal();
@@ -100,6 +105,32 @@ var zombieFunc = function(zombie) {
       zombie.kill();
     }
 
+    /**
+      *  @param shortQuiz : ShortQuiz -
+      */
+    zombie.setShortQuiz = function (shortQuiz) {
+      zombie.shortQuiz = shortQuiz;
+      zombie.ansTextArea.text = shortQuiz.quizAnswerWithBlankToFill;
+    }
+
+    zombie.getShortQuizAnswer = function() {
+      if(zombie.shortQuiz === undefined
+          || zombie.shortQuiz === null) {
+
+        return '';
+      }
+      return zombie.shortQuiz.answer;
+    }
+
+    zombie.getShortQuizQuestionDescription = function () {
+      if(zombie.shortQuiz === undefined
+          || zombie.shortQuiz === null) {
+
+        return '';
+      }
+      return zombie.shortQuiz.quizDescription;
+    }
+
     zombie.startCountdown = function(secToCount) {
       //console.log('lala');
       if(secToCount < 2) {
@@ -111,8 +142,6 @@ var zombieFunc = function(zombie) {
       var countdownLoop = game.time.events.loop(Phaser.Timer.SECOND, function() {
         zombie.timeCountdownArea.text = countingSec  + '';
         if(countingSec === 0) {
-          //game.time.events.remove(countdownLoop);
-          //console.log('huhu' + countingSec);
           zombie.onAttackSignal.dispatch(zombie);
           countingSec = secToCount;
         } else {
@@ -166,6 +195,7 @@ var zombieFunc = function(zombie) {
         // show answer area
         zombieToHilight.ansTypeArea.alpha = 1.0;
         zombieToHilight.ansTextArea.alpha = 1.0;
+        //zombieToHilight.dialogArea.alpha = 1.0;
     };
 
     //zombie.de_hilightAllZombie = function() {

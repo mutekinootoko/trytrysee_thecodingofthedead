@@ -1,0 +1,92 @@
+{"frames": [
+
+{
+	"filename": "go01",
+	"frame": {"x":603,"y":1,"w":200,"h":309},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":1,"w":200,"h":309},
+	"sourceSize": {"w":200,"h":312}
+},
+{
+	"filename": "go02",
+	"frame": {"x":805,"y":1,"w":200,"h":308},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":2,"w":200,"h":308},
+	"sourceSize": {"w":200,"h":312}
+},
+{
+	"filename": "go03",
+	"frame": {"x":1608,"y":1,"w":198,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":4,"w":198,"h":306},
+	"sourceSize": {"w":200,"h":312}
+},
+{
+	"filename": "go04",
+	"frame": {"x":1207,"y":1,"w":198,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":4,"w":198,"h":307},
+	"sourceSize": {"w":200,"h":312}
+},
+{
+	"filename": "go05",
+	"frame": {"x":1407,"y":1,"w":199,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":5,"w":199,"h":306},
+	"sourceSize": {"w":200,"h":312}
+},
+{
+	"filename": "go06",
+	"frame": {"x":1808,"y":1,"w":197,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":5,"w":197,"h":306},
+	"sourceSize": {"w":200,"h":312}
+},
+{
+	"filename": "go07",
+	"frame": {"x":1007,"y":1,"w":198,"h":308},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":3,"w":198,"h":308},
+	"sourceSize": {"w":200,"h":312}
+},
+{
+	"filename": "go08",
+	"frame": {"x":403,"y":1,"w":198,"h":311},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":1,"w":198,"h":311},
+	"sourceSize": {"w":200,"h":312}
+},
+{
+	"filename": "go09",
+	"frame": {"x":1,"y":1,"w":199,"h":312},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":0,"w":199,"h":312},
+	"sourceSize": {"w":200,"h":312}
+},
+{
+	"filename": "go10",
+	"frame": {"x":202,"y":1,"w":199,"h":312},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":0,"w":199,"h":312},
+	"sourceSize": {"w":200,"h":312}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "zombieGo",
+	"format": "RGBA8888",
+	"size": {"w":2006,"h":314},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:7a27f0726750f265c390b78f0bb01a53:f78a2489151e7678abd10629b9d4c014:31b5812e9b0daa3ef786972af5be1a67$"
+}
+}

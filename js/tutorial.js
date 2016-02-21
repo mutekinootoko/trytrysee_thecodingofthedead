@@ -1,15 +1,15 @@
 /**
- *  handle final boss fight
+ *  handle in game tutorial
  *
- *  1. boss shows up from top
- *  2. boss says some shit
- *  3. boss attack
+ *  1. bob shows up from ground
+ *  2. bob says something
+ *  3. bob hides into ground
  */
 
 define(["creature"], function(creature){
 
     //boot場景，用來做一些遊戲啟動前的準備
-    var bossStage = function(game){
+    var tutorialStage = function(game){
         var func = function() {
 
             //可調參數 start **************************************
@@ -31,31 +31,17 @@ define(["creature"], function(creature){
             var zombieGrrsArray = []; //Array<audio> 殭屍叫聲, 這個不要放creature裡 @see zombieGrrrrr()
             var zombieGroup;
 
-            var StateEnum = {"introductionBegin":1, "introductionEnd":2, "firstZombieBegin":3, "firstZombieEnd":4, "zombieMoving": 5}
+            var StateEnum = {"introductionBegin":1, "introductionEnd":2, "firstZombieBegin":3, "firstZombieEnd":4, "zombieMoving": 5, "introducting": 6};
             var currentState; // 目前的劇情進展
-            var TypingEnum = {"off":0, "dialog":1, "answer":2}
+            var TypingEnum = {"off":0, "dialog":1, "answer":2};
 
-            var finalBoss = null;
-            var shakeLoop = null; // for initial boss movement shaking
-
-            // prevent backspace(delete) capture by firefox or chrome to 'go back'
-            this.handleBackspace = function(e) {
-                if (e.which === 8 && !$(e.target).is("input, textarea")) {
-                  e.preventDefault();
-
-                  if (currentState == StateEnum.firstZombieBegin) {
-                    if(finalBoss.ansTypeArea.text.length > ZOMBIE_ANSWER_TYPING_AEAR_PREFIX.length) {
-                      finalBoss.ansTypeArea.text = finalBoss.ansTypeArea.text.substring(0, finalBoss.ansTypeArea.text.length -1)
-                    }
-                  }
-                }
-            };
+            var bob = null;
 
             this.preload = function(){
-                game.load.image('boss', 'assets/bossSpriteSheet/boss.png');
-                game.load.image('hell', 'assets/hell.jpg');
-                game.load.spritesheet('bossIdle', 'assets/bossSpriteSheet/bossIdle.png', 460, 352, 6);
-                game.load.spritesheet('bossAttack', 'assets/bossSpriteSheet/bossAttack.png', 528, 372, 6);
+                game.load.image('gameBg', 'assets/gameBg.jpg');
+                game.load.spritesheet('zombieAppear', 'assets/zombieAppear.png', 220, 288, 11);
+                game.load.spritesheet('zombieHide', 'assets/zombieHide.png', 220, 288, 11);
+                game.load.spritesheet('zombieIdle', 'assets/zombieIdle.png', 200, 308, 6);
                 game.load.audio('bgmusic', ['assets/audio/backgroundMusic.mp3', 'assets/audio/backgroundMusic.ogg']);
                 game.load.audio('zombieGrr1', ['assets/audio/zombie-1.mp3', 'assets/audio/zombie-1.ogg']);
                 game.load.audio('zombieGrr4', ['assets/audio/zombie-4.mp3', 'assets/audio/zombie-4.ogg']);
@@ -67,7 +53,7 @@ define(["creature"], function(creature){
             this.create = function(){
 
                 game.physics.startSystem(Phaser.Physics.ARCADE);
-                game.add.tileSprite(-250, -150, 1250, 950, 'hell');
+                game.add.tileSprite(-250, -150, 1250, 950, 'gameBg');
 
                 // world邊界設定的比camera大一點，可以做搖晃效果
                 game.world.setBounds(0, 0, game.world.width + 15, game.world.height);
@@ -112,57 +98,55 @@ define(["creature"], function(creature){
                     // show the introductory character
                     zombieGroup = game.add.group();
                     zombieGroup.enableBody = true;
-                    zombieGroup.createMultiple(1, 'bossIdle');
+                    zombieGroup.createMultiple(1, 'zombieAppear');
                     zombieGroup.setAll('anchor.x', 0.5);
                     zombieGroup.setAll('anchor.y', 0.5);
                     zombieGroup.setAll('outOfBoundsKill', true);
-                    var boss = zombieGroup.getFirstExists(false);
+                    var zombie = zombieGroup.getFirstExists(false);
 
-                    if(boss === null) { return; }
-
-                    boss.animations.add('idle');
-                    boss.animations.play('idle', 6, true);
-
-                    boss.reset(0.5*game.world.width, -400);
-
-                    zombieGroup.bringToTop(boss);
-                    boss = creature.zombieInit(game)(boss);
-                    boss.dialogs = ["Welcome to Hell", "I'm your boss", "if you can solve this problem"];
-                    boss.movingStyle = creature.movingStyle.static;
-
-                    boss.scale.setTo(1.5, 1.5);
-
-                    finalBoss = boss;
+                    if(zombie === null) { return; }
                     currentState = StateEnum.zombieMoving;
 
-                    shakeScreen();
-                    shakeLoop = game.time.events.loop(Phaser.Timer.SECOND*0.2, shakeScreen, this);
+                    zombie.animations.add('appear');
+                    zombie.animations.play('appear', 4, false);
+                    zombie.animations.currentAnim.onComplete.add(function() {
 
-                } else if (currentState == StateEnum.zombieMoving) {
-                    finalBoss.y += 7.0;
-                    if (finalBoss.y > game.world.height - 370.0) {
-                        if (shakeLoop) {
-                            // remove shakeloop earlier, otherwise the screen will shake when the boss is on the ground
-                            game.time.events.remove(shakeLoop);
-                            shakeLoop = null;
-                        }
-                    }
-                    if (finalBoss.y > game.world.height - 300.0) {
-                        currentState = StateEnum.introductionBegin;
-                        finalBoss.showDialog();
-                        finalBoss.nextDialog();
-                        typingMode(TypingEnum.dialog);
-                    }
+                        zombie.loadTexture('zombieIdle', 0);
+                        zombie.animations.add('idle');
+                        zombie.animations.play('idle', 6, false);
+                        zombie.animations.currentAnim.onComplete.add(function() {
+                            currentState = StateEnum.introductionBegin;
+                        zombie.animations.play('idle', 6, true);
+                        }, this);
+
+                    }, this);
+
+                    zombie.reset(0.5*game.world.width, game.world.height - zombie.height - 50);
+
+                    zombieGroup.bringToTop(zombie);
+                    creature.zombieInit(game)(zombie);
+                    zombie.dialogs = ["Welcome to Hell", "Our objective is to change the world!", "please write a hello world function"];
+                    zombie.movingStyle = creature.movingStyle.static;
+
+                    zombie.scale.setTo(1.5, 1.5);
+
+                    focusedZombie = zombie;
+
+                } else if (currentState == StateEnum.introductionBegin) {
+                    focusedZombie.showDialog();
+                    focusedZombie.nextDialog();
+                    typingMode(TypingEnum.dialog);
+                    currentState = StateEnum.introducting;
                 }else if (currentState == StateEnum.introductionEnd) {
-                    finalBoss.hilight();
-                    finalBoss.startCountdown(ZOMBIE_SEC_TO_WAIT_FOR_ANSWER);
+                    focusedZombie.hilight();
+                    focusedZombie.startCountdown(ZOMBIE_SEC_TO_WAIT_FOR_ANSWER);
                     typingMode(TypingEnum.answer);
 
                     // first zombie
                     currentState = StateEnum.firstZombieBegin;
 
                     // 註冊zombieAttack事件（signal, just like NSNotificationCenter）
-                    finalBoss.onAttackSignal.add(playerGetAttackByZombie, this);
+                    focusedZombie.onAttackSignal.add(playerGetAttackByZombie, this);
                     // TODO 註冊zombieOnDeath 事件
                 }
             }
@@ -171,6 +155,9 @@ define(["creature"], function(creature){
                 zombieToKill.killThisZombie();
                 typingMode(TypingEnum.off);
 
+                if (focusedZombie == zombieToKill) {
+                    focusedZombie = null;
+                }
                 if(hintText !== undefined
                         && hintText !== null) {
                     hintText.destroy();
@@ -187,14 +174,14 @@ define(["creature"], function(creature){
 
             function playerGetAttackByZombie(theZombieAttackingPlayer) {
 
-              finalBoss.loadTexture('bossAttack', 0);
-              finalBoss.animations.add('attack1', [0, 1, 2]);
-              finalBoss.animations.play('attack1', 6, false);
-              finalBoss.animations.currentAnim.onComplete.add(function() {
-                  finalBoss.animations.add('attack2', [3, 4, 5]);
-                  finalBoss.animations.play('attack2', 6, false);
-                  attackedEffect(theZombieAttackingPlayer);
-              }, this);
+              //focusedZombie.loadTexture('zombieAttack', 0);
+              //focusedZombie.animations.add('attack1', [0, 1, 2]);
+              //focusedZombie.animations.play('attack1', 6, false);
+              //focusedZombie.animations.currentAnim.onComplete.add(function() {
+                  //focusedZombie.animations.add('attack2', [3, 4, 5]);
+                  //focusedZombie.animations.play('attack2', 6, false);
+                  //attackedEffect(theZombieAttackingPlayer);
+              //}, this);
 
 
             }
@@ -229,8 +216,8 @@ define(["creature"], function(creature){
             }
 
             function attackedEffect(theZombieAttackingPlayer) {
-              finalBoss.loadTexture('bossIdle', 0);
-              finalBoss.animations.play('idle', 6, true);
+              focusedZombie.loadTexture('zombieIdle', 0);
+              focusedZombie.animations.play('idle', 6, true);
               PLAYER_CURRENT_HEALTH -= 20;
               drawHealthBarsNoArg();
               // 紅畫面，搖視角效果
@@ -269,37 +256,41 @@ define(["creature"], function(creature){
                     game.input.keyboard.clearCaptures(); // this won't clear 'ESC' and 'backspace' registed somewhere else
                 } else if (typingEnum == TypingEnum.dialog) {
                     game.input.keyboard.addCallbacks(this, null, null, function(char) {
-                        if (!finalBoss) { return; }
+                        if (!focusedZombie) { return; }
                         console.log('dialog mode on and key pressed: ' + char + 'in ascii number:' + char.charCodeAt());
 
-                        var moreDialog = finalBoss.nextDialog();
+                        var moreDialog = focusedZombie.nextDialog();
                         if (moreDialog < 0) {
                             // nothing to say, move to battle mode
                             currentState = StateEnum.introductionEnd;
                         }
                     });
                 } else if (typingEnum == TypingEnum.answer) {
-                    if (!finalBoss) { return; }
                     // typing mode on
                     game.input.keyboard.addCallbacks(this, null, null, function(char) {
+                            if (!focusedZombie) { return; }
                             // don't forget ESC key down event is almost registed
                             // backspace key is prevented from browser capture at the top.
                             console.log('typing mode on and key pressed: ' + char + 'in ascii number:' + char.charCodeAt());
                             switch(char.charCodeAt()) {
                                 case 0:
-                                    // enter key
-                                if(checkAnswer(finalBoss, finalBoss.ansTypeArea.text, 'HelloWorld')) {
+                                // enter key
+                                if(checkAnswer(focusedZombie, focusedZombie.ansTypeArea.text, 'HelloWorld')) {
                                   // zombie die!
-                                  killAZombie(finalBoss);
+                                  killAZombie(focusedZombie);
+                                  // move to next Stage
+                                  game.state.start('battle');
                                 } else {
                                   // player damaged
-                                  clearZombieAnsTypeArea(finalBoss);
-                                  playerGetAttackByZombie(finalBoss);
+                                  clearZombieAnsTypeArea(focusedZombie);
+
+                                  // bob is very peaceful
+                                  //playerGetAttackByZombie(focusedZombie);
 
                                 }
                                 break;
                             default:
-                                finalBoss.ansTypeArea.text += char;
+                                focusedZombie.ansTypeArea.text += char;
                                 break;
                                 }
                     });
@@ -312,6 +303,11 @@ define(["creature"], function(creature){
              */
             function checkAnswer(zombieGotAnswer, ansTypingAreaText, correctAnswer) {
                 var ans = ansTypingAreaText.substring(ZOMBIE_ANSWER_TYPING_AEAR_PREFIX.length, ansTypingAreaText.length);
+                if(ans === 'yo') {
+                  // cheat code
+                  return true;
+                }
+
                 console.log('checking ans:' + ans);
                 return (ans === correctAnswer);
             }
@@ -373,6 +369,6 @@ define(["creature"], function(creature){
     }; //var battle
 
     return {
-        boss: bossStage,
+        tutorial: tutorialStage,
     };
 });

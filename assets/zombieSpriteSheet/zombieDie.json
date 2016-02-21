@@ -1,0 +1,76 @@
+{"frames": [
+
+{
+	"filename": "die1",
+	"frame": {"x":583,"y":1,"w":226,"h":289},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":75,"y":0,"w":226,"h":289},
+	"sourceSize": {"w":444,"h":292}
+},
+{
+	"filename": "die2",
+	"frame": {"x":1,"y":1,"w":269,"h":259},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":63,"y":30,"w":269,"h":259},
+	"sourceSize": {"w":444,"h":292}
+},
+{
+	"filename": "die3",
+	"frame": {"x":1,"y":262,"w":279,"h":214},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":72,"y":75,"w":279,"h":214},
+	"sourceSize": {"w":444,"h":292}
+},
+{
+	"filename": "die4",
+	"frame": {"x":282,"y":248,"w":267,"h":147},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":87,"y":142,"w":267,"h":147},
+	"sourceSize": {"w":444,"h":292}
+},
+{
+	"filename": "die5",
+	"frame": {"x":272,"y":1,"w":295,"h":140},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":83,"y":151,"w":295,"h":140},
+	"sourceSize": {"w":444,"h":292}
+},
+{
+	"filename": "die6",
+	"frame": {"x":272,"y":143,"w":309,"h":103},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":82,"y":188,"w":309,"h":103},
+	"sourceSize": {"w":444,"h":292}
+},
+{
+	"filename": "die7",
+	"frame": {"x":282,"y":397,"w":378,"h":49},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":55,"y":241,"w":378,"h":49},
+	"sourceSize": {"w":444,"h":292}
+},
+{
+	"filename": "die8",
+	"frame": {"x":282,"y":448,"w":444,"h":22},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":268,"w":444,"h":22},
+	"sourceSize": {"w":444,"h":292}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "zombieDie",
+	"format": "RGBA8888",
+	"size": {"w":810,"h":477},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:762991a472785e1aecd24e4664d984ce:4fd2030b380a49c7676e855c7241d34b:14b88f25849336f73748e08b7ab4b1e3$"
+}
+}

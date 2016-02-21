@@ -4,10 +4,10 @@
  */
 
 
-define(["creature"], function(creature){
+define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
 
     //boot場景，用來做一些遊戲啟動前的準備
-    var battle = function(game){
+    var battle = function(game, questionTextArea){
         var func = function() {
 
             //可調參數 start **************************************
@@ -21,13 +21,15 @@ define(["creature"], function(creature){
             // 殭屍"往前走"放大比例速度
             var ZOMBIE_SCALE_INCREASING_RATE = 0.02;
             // 殭屍碰到player的放大倍數
-            var ZOMBIE_MEET_PLAYER_SCALE = 2;
+            var ZOMBIE_MEET_PLAYER_SCALE = 1.5;
             //殭屍等待答案時間
             var ZOMBIE_SEC_TO_WAIT_FOR_ANSWER = 10;
             //殭屍答案打字區 prefix
             var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = "Ans:";
             //血格總數量
-            var PLAYER_NUMBER_OF_HEALTH_BARS = 5;
+            var PLAYER_NUMBER_OF_HEALTH_BARS = 10;
+            // 殭屍攻擊點數
+            var ZOMBIE_HIT_POINT = 10;
             // 可調參數 end ************************************
 
 
@@ -49,6 +51,8 @@ define(["creature"], function(creature){
             var TypingEnum = {"off":0, "dialog":1, "answer":2}
             var currentState; // 目前的劇情進展
 
+            var shortQuizCollection; //Array<ShortQuiz>
+
 
             // prevent backspace(delete) capture by firefox or chrome to 'go back'
             this.handleBackspace = function(e) {
@@ -66,15 +70,22 @@ define(["creature"], function(creature){
             };
 
             this.preload = function(){
-                game.load.image('zombie', 'zombie.gif');
+                //game.load.image('zombie', 'zombie.gif');
+
+                game.load.spritesheet('zombieGo', 'assets/zombieGo.png', 200, 312, 10);
+                game.load.spritesheet('zombieIdle', 'assets/zombieIdle.png', 200, 308, 6);
+                game.load.spritesheet('zombieHit', 'assets/zombieHit.png', 372, 324, 7);
+                game.load.spritesheet('zombieDie', 'assets/zombieDie.png', 444, 292, 8);
                 //game.load.image('zombie', 'zombie2.jpg');
-                game.load.image('gameBg', 'gameBg.jpg');
-                game.load.audio('bgmusic', ['backgroundMusic.mp3', 'backgroundMusic.ogg']);
-                game.load.audio('zombieGrr1', ['zombie-1.mp3', 'zombie-1.ogg']);
-                game.load.audio('zombieGrr4', ['zombie-4.mp3', 'zombie-4.ogg']);
-                game.load.audio('zombieGrr10', ['zombie-10.mp3', 'zombie-10.ogg']);
-                game.load.audio('zombieGrr11', ['zombie-11.mp3', 'zombie-11.ogg']);
-                game.load.audio('zombieGrr15', ['zombie-15.mp3', 'zombie-15.ogg']);
+                game.load.image('gameBg', 'assets/gameBg.jpg');
+
+                // mp3 for chrome, ogg for firefox
+                game.load.audio('bgmusic', ['assets/audio/backgroundMusic.mp3', 'assets/audio/backgroundMusic.ogg']);
+                game.load.audio('zombieGrr1', ['assets/audio/zombie-1.mp3', 'assets/audio/zombie-1.ogg']);
+                game.load.audio('zombieGrr4', ['assets/audio/zombie-4.mp3', 'assets/audio/zombie-4.ogg']);
+                game.load.audio('zombieGrr10', ['assets/audio/zombie-10.mp3', 'assets/audio/zombie-10.ogg']);
+                game.load.audio('zombieGrr11', ['assets/audio/zombie-11.mp3', 'assets/audio/zombie-11.ogg']);
+                game.load.audio('zombieGrr15', ['assets/audio/zombie-15.mp3', 'assets/audio/zombie-15.ogg']);
             };
 
             this.create = function(){
@@ -84,6 +95,11 @@ define(["creature"], function(creature){
 
                 // world邊界設定的比camera大一點，可以做搖晃效果
                 game.world.setBounds(0, 0, game.world.width + 15, game.world.height);
+
+                // Short quiz colleciton
+                shortQuizCollection = [];
+                shortQuizCollection.push(new ShortQuiz.ShortQuiz('Put first 10 digits of Pi in each element of an Array. <br/> eg: [ "3", "1", "4", "1", "5", "9", "2", "6", "5", "3" ] <br/><b>Hint: Math.PI.toString().substring(0, 11).replace(\'.\', \'\').split(\'\');</b>', 'Math.PI.toString().________\n.replace(\'.\', \'\').split(\'\');', 'substring(0,11)'));
+                shortQuizCollection.push(new ShortQuiz.ShortQuiz('Insert an array in another array.<br/>  var a = [1,2,3,7,8,9];<br/>var b = [4,5,6]; <br/>var insertIndex = 3; <br/>Make a = [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ];  <br/><b>Hint: a.splice.apply(a, Array.concat(insertIndex, 0, b));</>', 'a.splice.apply( \na, Array._____(insertIndex, 0, b));', 'concat'));
 
                 zombieGrrsArray.push(game.add.audio('zombieGrr1'));
                 zombieGrrsArray.push(game.add.audio('zombieGrr4'));
@@ -101,14 +117,13 @@ define(["creature"], function(creature){
 
                 zombieGroup = game.add.group();
                 zombieGroup.enableBody = true;
-                zombieGroup.createMultiple(10, 'zombie');
+                zombieGroup.createMultiple(10, 'zombieGo');
                 zombieGroup.setAll('anchor.x', 0);
                 zombieGroup.setAll('anchor.y', 0);
                 zombieGroup.setAll('outOfBoundsKill', true);
 
                 isAllZombiePaused = false;
                 isDebug = getUrlVars()['debug'] === "1";
-
 
 
                 var keyEsc = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
@@ -122,9 +137,9 @@ define(["creature"], function(creature){
                 healthBars = game.add.graphics(hpText.right + 5, 10);
                 drawHealthBarsNoArg();
 
-                characterRising(); // Lono: I hate waiting
-                game.time.events.loop(Phaser.Timer.SECOND * 2, characterRising, this);
-
+                zombieRising(); // Lono: I hate waiting
+                game.time.events.loop(Phaser.Timer.SECOND * 2, zombieRising, this);
+                //game.time.events.loop(Phaser.Timer.SECOND * 2, zombieRising, this);
             };
 
             this.update = function() {
@@ -139,10 +154,9 @@ define(["creature"], function(creature){
                             }
                         }
 
-
                         if(zombie.scale.x > ZOMBIE_MEET_PLAYER_SCALE
                             && isAnyZombieWaitingForAnswer() === false) {
-                            // meet the player
+                            // zombie meet player
                             console.log('meet the player');
                             pauseAllAliveZombies();
                             zombie.zIndexBeforeClicked = zombie.z;
@@ -152,16 +166,13 @@ define(["creature"], function(creature){
                             }
                             zombieWaitingForAnswer = zombie;
                             zombieWaitingForAnswer.isAbleToEsc = false;
+                            zombieWaitingForAnswer.hilight();
+                            questionTextArea.html(zombieWaitingForAnswer.getShortQuizQuestionDescription);
 
-                            if (currentState == StateEnum.introductionBegin) {
-                                zombie.showDialog();
-                                zombie.nextDialog();
-                                typingMode(TypingEnum.dialog);
-                            } else if (currentState == StateEnum.introductionEnd) {
+                            if (currentState == StateEnum.introductionEnd) {
                                 zombie.hilight();
                                 zombie.startCountdown(ZOMBIE_SEC_TO_WAIT_FOR_ANSWER);
                                 typingMode(TypingEnum.answer);
-                                currentState = StateEnum.introductionEnd;
                             }
                         }
 
@@ -217,30 +228,10 @@ define(["creature"], function(creature){
               }
             }
 
-
-            function characterRising() {
-                if (!currentState) {
-                    // show the introductory character
-                    var zombie = zombieGroup.getFirstExists(false);
-                    if(zombie === null) { return; }
-                    zombieGroup.sendToBack(zombie);
-
-                    currentState = StateEnum.introductionBegin;
-                    zombie = creature.zombieInit(game)(zombie);
-                    zombie.dialogs = ["Brains...", "More Brains...", "..."];
-                    zombie.movingStyle = creature.movingStyle.static;
-
-                    zombie.reset(game.world.width*0.3, game.world.height-400.0);
-                    zombie.scale.setTo(3.0, 3.0);
-
-                }else if (currentState == StateEnum.introductionEnd) {
-                    // first zombie
-                    //currentState = StateEnum.firstZombieBegin;
-                    zombieRising();
-                }
-            }
-
             function zombieRising() {
+                if (!currentState) {
+                    currentState = StateEnum.introductionEnd;
+                }
                 if(isAllZombiePaused) {
                     return;
                 }
@@ -263,11 +254,16 @@ define(["creature"], function(creature){
                     zombie.body.velocity.x = game.rnd.integerInRange(-10, -25);
                     zombie.body.acceleration.x = game.rnd.realInRange(-3, -4.2);
                 }
+                zombie.loadTexture('zombieGo', 0);
+                zombie.animations.add('go');
+                zombie.animations.play('go', 10, true);
                 zombie = creature.zombieInit(game)(zombie);
 
                 // 註冊zombieAttack事件（signal, just like NSNotificationCenter）
                 zombie.onAttackSignal.add(playerGetAttackByZombie, this);
                 // TODO 註冊zombieOnDeath 事件
+
+                zombie.setShortQuiz( shortQuizCollection[game.rnd.integerInRange(0, shortQuizCollection.length - 1)]);
 
                 if(isDebug) {
                     console.log("live counting:" + zombieGroup.countLiving() + ", dead counting:" +zombieGroup.countDead());
@@ -297,6 +293,9 @@ define(["creature"], function(creature){
 
                 zombieGroup.forEachAlive(function(zombie_foo) {
                     zombie_foo.body.enable = false;
+                    zombie_foo.loadTexture('zombieIdle', 0);
+                    zombie_foo.animations.add('idle');
+                    zombie_foo.animations.play('idle', 6, true);
                 }, this);
 
             }
@@ -304,6 +303,9 @@ define(["creature"], function(creature){
             function resumeAllPasuedZombies() {
                 zombieGroup.forEachAlive(function(zombie_foo) {
                     zombie_foo.body.enable = true;
+                    zombie_foo.loadTexture('zombieGo', 0);
+                    zombie_foo.animations.add('go');
+                    zombie_foo.animations.play('go', 10, true);
                 }, this);
 
                 isAllZombiePaused = false;
@@ -320,8 +322,24 @@ define(["creature"], function(creature){
                 typingMode(TypingEnum.off);
             }
 
+            function killAZombieWithAnimation(zombieToKill) {
+
+              zombieToKill.loadTexture('zombieDie', 0);
+              zombieToKill.animations.add('die');
+              zombieToKill.animations.play('die', 8, false);
+              zombieToKill.animations.currentAnim.onComplete.add(function() {
+                  killAZombie(zombieToKill);
+              }, this);
+            }
+
+
+            /**
+            @param zombieToKill -
+            */
             function killAZombie(zombieToKill) {
+                zombieToKill.animations.destroy();
                 zombieToKill.killThisZombie();
+                questionTextArea.html('');
                 resumeAllPasuedZombies();
                 typingMode(TypingEnum.off);
 
@@ -344,7 +362,7 @@ define(["creature"], function(creature){
             }
 
             function playerGetAttackByZombie(theZombieAttackingPlayer) {
-              PLAYER_CURRENT_HEALTH -= 20;
+              PLAYER_CURRENT_HEALTH -= ZOMBIE_HIT_POINT;
               drawHealthBarsNoArg();
               // 紅畫面，搖視角效果
               var bloodInTheFace = game.add.graphics(0,0);
@@ -398,18 +416,19 @@ define(["creature"], function(creature){
                         }
                     });
                 } else if (typingEnum == TypingEnum.answer) {
-                    if (!isAnyZombieWaitingForAnswer()) { return; }
                     // typing mode on
                     game.input.keyboard.addCallbacks(this, null, null, function(char) {
+                            if (!isAnyZombieWaitingForAnswer()) { return; }
                             // don't forget ESC key down event is almost registed
                             // backspace key is prevented from browser capture at the top.
                             console.log('typing mode on and key pressed: ' + char + 'in ascii number:' + char.charCodeAt());
                             switch(char.charCodeAt()) {
                                 case 0:
                                     // enter key
-                                if(checkAnswer(zombieWaitingForAnswer, zombieWaitingForAnswer.ansTypeArea.text, 'HelloWorld')) {
+                                    // 比較時抽掉空格 作弊的比較方式  eg: substring(0, 11) 跟 substring(0,11)
+                                if(checkAnswer(zombieWaitingForAnswer, zombieWaitingForAnswer.ansTypeArea.text.replace(' ', ''), zombieWaitingForAnswer.getShortQuizAnswer().replace(' ', ''))) {
                                   // zombie die!
-                                  killAZombie(zombieWaitingForAnswer);
+                                  killAZombieWithAnimation(zombieWaitingForAnswer);
                                 } else {
                                   // player damaged
                                   clearZombieAnsTypeArea(zombieWaitingForAnswer);
@@ -433,6 +452,10 @@ define(["creature"], function(creature){
              */
             function checkAnswer(zombieGotAnswer, ansTypingAreaText, correctAnswer) {
                 var ans = ansTypingAreaText.substring(ZOMBIE_ANSWER_TYPING_AEAR_PREFIX.length, ansTypingAreaText.length);
+                if(ans === 'yo') {
+                  // cheat code
+                  return true;
+                }
                 console.log('checking ans:' + ans);
                 return (ans === correctAnswer);
             }
