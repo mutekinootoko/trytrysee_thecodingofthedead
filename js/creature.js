@@ -30,7 +30,7 @@ var zombieFunc = function(zombie) {
     var dialogArea = game.make.text(0,
                                      -zombie.height*zombie.anchor.y + 0.3*zombie.height,
                                      "",
-                                     { font: "22px Arial",
+                                     { font: "30px Arial",
                                         fill: "#FFFFFF",
                                         wordWrap: true,
                                         align: "left",
@@ -41,8 +41,8 @@ var zombieFunc = function(zombie) {
 
     var ansTextArea = game.make.text(0,
                                      0,
-                                     "function hello() {\n    return('_____');\n}",
-                                     { font: "15px Arial",
+                                     "function hello() {\n    return('_____');        \n}",
+                                     { font: "22px Arial",
                                        fill: "#40FF00",
                                        wordWrap: false,
                                        align: "left",
@@ -61,7 +61,7 @@ var zombieFunc = function(zombie) {
     //timeCountdownArea.anchor.set(0.5, 0.5);
     var ansTypeArea = game.make.text(timeCountdownArea.right + 22, 50,
                                      ZOMBIE_ANSWER_TYPING_AEAR_PREFIX,
-                                     { font: "15px Arial",
+                                     { font: "22px Arial",
                                        fill: "#F7FE2E",
                                        wordWrap: false,
                                        align: "left",
