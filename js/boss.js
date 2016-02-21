@@ -15,7 +15,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             //可調參數 start **************************************
 
             //殭屍等待答案時間
-            var ZOMBIE_SEC_TO_WAIT_FOR_ANSWER = 10;
+            var ZOMBIE_SEC_TO_WAIT_FOR_ANSWER = 11;
             //殭屍答案打字區 prefix
             var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = creature.ansPrefix;
             //血格總數量
@@ -40,6 +40,8 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             var finalBoss = null;
             var shakeLoop = null; // for initial boss movement shaking
             var currentCodeQuestion; //目前做的題目
+            // 讀取bluemix錯誤計數
+            var bmerrorCount;
 
             // prevent backspace(delete) capture by firefox or chrome to 'go back'
             this.handleBackspace = function(e) {
@@ -70,6 +72,8 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                 codeRunButton.show();
                 //Run按鈕加上event
                 codeRunButton.click(runEditorCode);
+
+                bmerrorCount = 0;
 
                 game.physics.startSystem(Phaser.Physics.ARCADE);
                 game.add.tileSprite(-250, -150, 1250, 950, 'gameBg');
@@ -169,7 +173,8 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                   playerGetAttackByZombie(finalBoss);
                 }
               }).fail(function() {
-                finalBoss.say('Bluemix is not here, try again ...');
+                finalBoss.say('Bluemix is not here, try again ... (error when loading service...)');
+                
               });
             }
 
@@ -193,10 +198,10 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
                     zombieGroup.bringToTop(boss);
                     boss = creature.zombieInit(game)(boss);
-                    boss.dialogs = ["Impressive!",
-                                    "But your journey ends here",
-                                    "You will never find Bluemix",
-                                    "Solve my quiz or prepare to die!"
+                    boss.dialogs = ["Impressive, human!",
+                                    "But your journey ends here.",
+                                    "The Bluemix only meet the smart one.",
+                                    "Solve my quiz or be gone!"
                                    ];
                     boss.movingStyle = creature.movingStyle.static;
 

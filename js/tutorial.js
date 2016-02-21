@@ -124,19 +124,19 @@ define(["creature"], function(creature){
 
                     zombieGroup.bringToTop(zombie);
                     creature.zombieInit(game)(zombie);
-                    zombie.dialogs = ["Welcome to coding of dead",
-                                      "Our objective is to find the great Bluemix®",
-                                      "Please turn on your speaker for the best experience",
-                                      "Before you begin, I will test your brain power",
-                                      "Please write a hello world function",
+                    zombie.dialogs = ["Welcome to coding of dead （press any key）",
+                                      "You are here to meet the great Bluemix® ?",
+                                      "Then turn on your speaker for the best experience.",
+                                      "Before you begin, I will test your coding power",
+                                      "Complete this hello world function",
                                       "Hint: type 'HelloWorld' and press the ENTER key", // number 6
                                       "Good!               ",
-                                      "My buddies will ask you more",
-                                      "Hints can be found on the big gray right panel",
-                                      "or you can type 'yo' to bypass the quiz",
-                                      "Watch for your HP at the top-left corner",
-                                      "If you failed, Bluemix will be lost forever!",
-                                      "Good Luck           "];
+                                      "My buddies will ask for more...",
+                                      "Hints can be found on the right hand side",
+                                      "or you can type 'yo' to cheat...",
+                                      "Watch for your health at the top-left corner",
+                                      "If you failed, you will never see the great one.",
+                                      "Good Luck!          "];
                     zombie.movingStyle = creature.movingStyle.static;
 
                     zombie.scale.setTo(1.3, 1.3);
