@@ -17,7 +17,7 @@ define(["creature"], function(creature){
             //殭屍等待答案時間
             var ZOMBIE_SEC_TO_WAIT_FOR_ANSWER = 10;
             //殭屍答案打字區 prefix
-            var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = "Ans:";
+            var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = creature.ansPrefix;
             //血格總數量
             var PLAYER_NUMBER_OF_HEALTH_BARS = 10;
             // 可調參數 end ************************************

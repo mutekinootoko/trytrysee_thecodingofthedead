@@ -10,12 +10,13 @@
 define([], function(){
 var MovingStyle = {"scale":1, "static":2};
 
+//殭屍答案打字區 prefix
+var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = "Ans:　";
+
 //boot場景，用來做一些遊戲啟動前的準備
 var zombieInit = function(game){
 var zombieFunc = function(zombie) {
 
-    //殭屍答案打字區 prefix
-    var ZOMBIE_ANSWER_TYPING_AEAR_PREFIX = "Ans:";
 
     zombie.inputEnabled = true;
     zombie.tint = 0xFFFFFF;
@@ -265,5 +266,6 @@ var zombieFunc = function(zombie) {
     return {
         zombieInit: zombieInit,
         movingStyle: MovingStyle,
+        ansPrefix: ZOMBIE_ANSWER_TYPING_AEAR_PREFIX
     };
 }); // define
