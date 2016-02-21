@@ -1,7 +1,7 @@
-
+#The coding of the dead
 ![Splash](https://cloud.githubusercontent.com/assets/4080524/13202495/bbe2b4ba-d8d7-11e5-9df3-96a0a3e96740.jpg)
 
-# Try Try See team members
+# Team members
 * Max
 * Hai Feng
   * a iOS guru
@@ -15,7 +15,6 @@
   * [about.me](https://about.me/mutekinootoko)
   * LLAP
 
-# The Coding of the dead
 ## Description
 
 
