@@ -115,7 +115,16 @@ define(["creature"], function(creature){
 
                     zombieGroup.bringToTop(zombie);
                     creature.zombieInit(game)(zombie);
-                    zombie.dialogs = ["Welcome to Hell", "Our objective is to change the world!", "please write a hello world function"];
+                    zombie.dialogs = ["Welcome to coding of dead",
+                                      "Our objective is to find the great Bluemix®",
+                                      "Please turn on your speaker for the best experience",
+                                      "Before you begin, I will test your brain power",
+                                      "My buddies will ask you some coding questions",
+                                      "Just type the answer and press the ENTER key",
+                                      "Hints can be found on the right panel",
+                                      "Watch for your HP at the top-left corner",
+                                      "If you failed, Bluemix will be lost forever!",
+                                      "Good Luck           "];
                     zombie.movingStyle = creature.movingStyle.static;
 
                     zombie.scale.setTo(1.3, 1.3);
