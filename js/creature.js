@@ -81,6 +81,10 @@ var zombieFunc = function(zombie) {
     zombie.dialogArea = dialogArea;
     zombie.timeCountdownArea = timeCountdownArea;
 
+    zombie.ansTypeArea.x = zombie.ansTextArea.left;
+    zombie.ansTypeArea.y = zombie.ansTextArea.bottom;
+
+
     // zombie's short quiz
     zombie.shortQuiz // ShortQuiz object
 
@@ -115,6 +119,8 @@ var zombieFunc = function(zombie) {
     zombie.setShortQuiz = function (shortQuiz) {
       zombie.shortQuiz = shortQuiz;
       zombie.ansTextArea.text = shortQuiz.quizAnswerWithBlankToFill;
+      zombie.ansTypeArea.x = zombie.ansTextArea.left;
+      zombie.ansTypeArea.y = zombie.ansTextArea.bottom;
     }
 
     zombie.getShortQuizAnswer = function() {
@@ -161,6 +167,14 @@ var zombieFunc = function(zombie) {
         // just in case
         zg.play();
       }
+    }
+
+    zombie.say = function (str) {
+        if (str) {
+            var dialogArea = zombie.dialogArea;
+            dialogArea.text = str;
+            dialogArea.x = -dialogArea.width + 10;
+        }
     }
 
     zombie.nextDialog = function () {
