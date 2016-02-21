@@ -135,8 +135,8 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
               var postfix = currentCodeQuestion.getFunctionCallString();
               var runcode = aceeditorObj.getValue() + '\n' + postfix + ';';
 
-              finalBoss.say('Nice! I\'m checking your code...');
-              console.log('before sending to Bluemix runcde:' + runcode);
+              finalBoss.say('Nice! Checking your code with the holy Bluemix ...');
+              console.log('before sending to Bluemix runcode:' + runcode);
               $.ajax({
                 type: "POST",
                 url: BLUEMIX_JS_SANDBOX_SERVER_URL,
@@ -161,7 +161,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                   playerGetAttackByZombie(finalBoss);
                 } else if (data.result === expectedOutput) {
                   // answer is currect!
-                  finalBoss.say('aaaaaaaah~~~ BlueMix the Holy one, safe me~~~');
+                  finalBoss.say('aaaaaaaah~~~ Bluemix the Holy one, safe me~~~');
                   killBoss(finalBoss);
                 } else {
                   // wrong answer
@@ -169,7 +169,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                   playerGetAttackByZombie(finalBoss);
                 }
               }).fail(function() {
-                finalBoss.say('BlueMix is not here, try again later...');
+                finalBoss.say('Bluemix is not here, try again ...');
               });
             }
 
