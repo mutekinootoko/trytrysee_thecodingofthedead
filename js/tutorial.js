@@ -56,7 +56,7 @@ define(["creature"], function(creature){
 
                 bgMusic = game.add.audio('bgmusic');
                 // play(marker, position, volume, loop, forceRestart)
-                bgMusic.play('', 0, 0.4, true);//loop. Tune down the volume so that other sound effects could be heard
+                bgMusic.play('', 0, 0.2, true);//loop. Tune down the volume so that other sound effects could be heard
 
                 isDebug = getUrlVars()['debug'] === "1";
 
