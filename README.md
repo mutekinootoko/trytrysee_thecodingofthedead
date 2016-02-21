@@ -14,12 +14,11 @@ Type, Code, Kill zombies then face the ultimate code judging system powered by [
 ### Members
 * Max Chen ([github](https://github.com/MaxChen) ,[linkedin](https://tw.linkedin.com/in/maxnesto))
   * UI/UX designer ([behance](https://www.behance.net/maxnesto))
-  * an iOS rookie
-  * AppCoda Chinese writer with Swift
-  * wrote the server side node.js code on Bluemix
+  * JavaScript guru
+  * [AppCoda](http://www.appcoda.com.tw/author/maxchen/) contributing writer
 
 * Hai Feng ([github](https://github.com/haifengkao))
-  * an iOS guru
+  * iOS ninja
   * iOS Challenge 2015 first place
   * Objective-C with love
 
@@ -40,35 +39,45 @@ Please set browser window size to **1027x768** or above for best experiences.
 ### The big bad Golem
 ![Boss](https://cloud.githubusercontent.com/assets/4080524/13202673/c305d6c2-d8dd-11e5-8b7d-ced3a8885358.jpg)
 
-### The ultimate code 'judging' system  Bluemix®
+### The ultimate code judge system  Bluemix®
 ![Bluemix](https://cloud.githubusercontent.com/assets/4080524/13203382/c4fd64ae-d8f1-11e5-93dd-5df9a420c56f.jpg)
 
 ## Cheats
 ### Zombies
 Answer **yo** to cheat.
+
 ### Golem
-Correct code are actually in the comments, or remove all code and type **yo** then hit RUN. Just for judges' convenience. :D
+For the judges' convenience, correct code is actually in the comments.
+Alternatively, you can remove all code and type **yo** then hit RUN.
 
 ## Programming languages and Frameworks
-* Javascript
+* JavaScript
 * [Phaser](http://phaser.io/), 2D game engine.
-* [ace](https://ace.c9.io/), code editor and syntax highlight.
+* [Ace](https://ace.c9.io/), code editor and syntax highlight.
 * [Sandbox](https://github.com/gf3/sandbox), execute javascript in server side node.js.
-* [IBM Bluemix®](http://www.ibm.com/cloud-computing/bluemix/), hosting node.js for executing javascript code player submit.
+* [IBM Bluemix®](http://www.ibm.com/cloud-computing/bluemix/), hosting node.js for executing online code judge system
 
 ## Credit
 
-### General Game  Art
-By our magnificent artist Max.
+### Online Judge System Hosted on Bluemix
+* Max
+* Marku
+
+### Zombie Stages
+* Marku
+* Hai Feng
+
+### General Game Art
+* Max
 
 ### Animations
-* [Zombie](http://opengameart.org/content/zombie-animations)
-* [Golem](http://opengameart.org/content/golem-animations)
+* Zombie ([OpenGameArt](http://opengameart.org/content/zombie-animations))
+* Golem ([OpenGameArt](http://opengameart.org/content/golem-animations))
 
 ### Sound Effects
-* [Earthquake](http://mrclan.com/fastdl/tfc/sound/earthquake.wav)
-* [Explosion](http://www.freesfx.co.uk/soundeffects/fire_explosions/?p=2)
-* [Gunshot](http://www.findsounds.com/)
+* Earthquake ([TFC video cache](http://mrclan.com/fastdl/tfc/sound/earthquake.wav))
+* Explosion ([FreeSFX](http://www.freesfx.co.uk/soundeffects/fire_explosions/?p=2))
+* Gunshot ([FindSounds](http://www.findsounds.com/))
 
 ## License
 MIT for the code, and CC-BY for the art and music.
