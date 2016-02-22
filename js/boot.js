@@ -42,6 +42,8 @@ define([], function(){
 
             function start() {
                 game.load.image('gameBg', 'assets/gameBg.jpg');
+                game.load.image('tutorialBg', 'assets/tutorialBg.jpg');
+                game.load.image('bossBg', 'assets/bossBg.jpg');
                 game.load.audio('bgmusic', ['assets/audio/backgroundMusic.mp3', 'assets/audio/backgroundMusic.ogg']);
                 game.load.audio('zombieGrr1', ['assets/audio/zombie-1.mp3', 'assets/audio/zombie-1.ogg']);
                 game.load.audio('zombieGrr4', ['assets/audio/zombie-4.mp3', 'assets/audio/zombie-4.ogg']);
