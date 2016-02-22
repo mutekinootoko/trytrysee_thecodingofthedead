@@ -8,7 +8,7 @@
 
 ## Description
 A HTML5 game tests your Javascript coding ability.
-Type, Code, Kill zombies then face the ultimate code judging system powered by [IBM Bluemix®](http://www.ibm.com/cloud-computing/bluemix/).
+Type, Code, Kill zombies then face the ultimate code judging system powered by [IBM Bluemix®](https://console.ng.bluemix.net/).
 
 ## Team : Try Try See
 ### Members
@@ -55,7 +55,7 @@ Alternatively, you can remove all code and type **yo** then hit RUN.
 * [Phaser](http://phaser.io/), 2D game engine.
 * [Ace](https://ace.c9.io/), code editor and syntax highlight.
 * [Sandbox](https://github.com/gf3/sandbox), execute javascript in server side node.js.
-* [IBM Bluemix®](http://www.ibm.com/cloud-computing/bluemix/), hosting node.js for executing online code judge system
+* [IBM Bluemix®](https://console.ng.bluemix.net/), hosting node.js for executing online code judge system
 
 ## Credit
 
