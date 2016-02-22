@@ -28,13 +28,13 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             var hintText; // 左上角的text sprite
             var healthBars; //血條 graphics 物件
             var hpText; // 血條前顯示字樣
-            var PLAYER_CURRENT_HEALTH; //玩家血量
+            var PLAYER_CURRENT_HEALTH = 0; //玩家血量
             var zombieGrrsArray = []; //Array<audio> 殭屍叫聲, 這個不要放creature裡 @see zombieGrrrrr()
             var gunshot; // gunshot sound
             var zombieGroup;
 
             var StateEnum = {"introductionBegin":1, "introductionEnd":2, "firstZombieBegin":3, "firstZombieEnd":4, "zombieMoving": 5}
-            var currentState; // 目前的劇情進展
+            var currentState = null; // 目前的劇情進展
             var TypingEnum = {"off":0, "dialog":1, "answer":2}
 
             var finalBoss = null;
@@ -46,10 +46,14 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             var bmerrorCount;
 
             var hasSubmit = null;
+            var isPlayerDead = false;
 
             this.init = function () {
               if(arguments.length > 0) {
                 PLAYER_CURRENT_HEALTH = arguments[0]; // 前一個state傳過來的 player health
+              }
+              if (PLAYER_CURRENT_HEALTH <= 0) {
+                  PLAYER_CURRENT_HEALTH = 100;
               }
             };
 
@@ -112,6 +116,10 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
               * check code in ace
               */
             function runEditorCode() {
+
+              if (!finalBoss){
+                  return;
+              }
               hasSubmit = true;
 
               if(aceeditorObj.getValue() === 'yo') {
@@ -292,6 +300,22 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                 }
             }
 
+            this.shutdown = function(){
+                typingMode(TypingEnum.off);
+                bossAnswerDiv.hide();
+                codeRunButton.hide();
+                if(hintText !== undefined
+                        && hintText !== null) {
+                    hintText.destroy();
+                    hintText = null;
+                }
+
+
+                if (questionTextArea) {
+                    questionTextArea.html('');
+                }
+            }
+
             function killBoss(zombie) {
                 if (!finalBoss){
                     return;
@@ -301,9 +325,6 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                 if (explosionSound) {
                     explosionSound.play();
                 }
-                //魔王關答案區打開
-                bossAnswerDiv.hide();
-                codeRunButton.hide();
 
                 zombie.zombie.loadTexture('bossDie', 0);
                 zombie.zombie.animations.add('die');
@@ -410,6 +431,12 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
               finalBoss.zombie.loadTexture('bossIdle', 0);
               finalBoss.zombie.animations.play('idle', 6, true);
               PLAYER_CURRENT_HEALTH -= 20;
+
+              if (PLAYER_CURRENT_HEALTH <= 0){
+                  isPlayerDead = true;
+                  finalBoss = null; // disable all animations
+              }
+
               drawHealthBarsNoArg();
               // 紅畫面，搖視角效果
               var bloodInTheFace = game.add.graphics(0,0);
@@ -435,6 +462,10 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                     game.time.events.add(Phaser.Timer.SECOND * 0.1, function() {
                       game.camera.x = 0;
                       bloodInTheFace.destroy();
+                      if (isPlayerDead) {
+                          game.States.mLastState = game.state.current;
+                          game.state.start('lose');
+                      }
                     }, this);
                   }, this);
                 }, this);
