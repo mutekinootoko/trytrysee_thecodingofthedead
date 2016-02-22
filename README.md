@@ -3,6 +3,8 @@
 
 ## How to run
  [CLICK HERE TO RUN](http://169.44.56.42/trytrysee/index.html)
+ 
+ [Link 2](http://169.45.223.200)
 
  If you are using Firefox browser, make sure you switch off **"Search for text when I start typing"** in preferences -> advance -> general to release keyboard events.
 
