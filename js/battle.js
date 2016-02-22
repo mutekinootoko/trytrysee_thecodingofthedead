@@ -624,7 +624,6 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                 return array;
             }
 
-            return this;
         }; // var func
 
         return func;
