@@ -27,7 +27,7 @@ define(['CodeQuestion'],
 
                 var q1 = new CodeQuestion.CodeQuestion(
                     0,
-                    'Reverse a string.',
+                    "Reverse a string.<BR><BR>Example: an output for 'pear' would be 'raep'.<BR><BR>[input] string<BR><BR>[output] string",
                     ['"abc"'],
                     "'cba'",
                     'function stringReverse(s){\n\t//code here\n\t//return s.split("").reverse().join("");\n\treturn "";\n}',
@@ -36,7 +36,7 @@ define(['CodeQuestion'],
 
                 var q3 = new CodeQuestion.CodeQuestion(
                     2,
-                    'Convert integers into roman numerals.',
+                    "Convert integers into roman numerals.<BR><BR>Example: <BR>an output for 126 would be 'CXXVI'.<BR>an output for 623 would be 'DCXXIII'<BR><BR>[input] integer n<BR><BR>[output] string",
                     [512],
                     "'DXII'",
                     'function romanize (num) {\n\t//code here\n\t/*var digits = String(+num).split(""),\n\t\tkey = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM","","X","XX","XXX","XL","L","LX","LXX","LXXX","XC","","I","II","III","IV","V","VI","VII","VIII","IX"],\n\t\troman = "",\n\t\ti = 3;\n\twhile (i--)\n\t\troman = (key[+digits.pop() + (i * 10)] || "") + roman;\n\treturn Array(+digits.join("") + 1).join("M") + roman;*/\n\treturn "";\n}',
@@ -46,7 +46,7 @@ define(['CodeQuestion'],
 
                 var q4 = new CodeQuestion.CodeQuestion(
                     3,
-                    'Check for leap year.',
+                    "Check for leap year.<BR><BR>Example: <BR>an output for 2016 would be true.<BR>an output for 2017 would be false.<BR><BR>[input] integer n<BR><BR>[output] boolean",
                     ['2000'],
                     'true',
                     'function isLeap (yr) {\n\t/*if (yr > 1582) return !((yr % 4) || (!(yr % 100) && (yr % 400)));\n\tif (yr >= 0) return !(yr % 4);\n\tif (yr >= -45) return !((yr + 1) % 4);\n\treturn false;*/\n\treturn false;\n}',
