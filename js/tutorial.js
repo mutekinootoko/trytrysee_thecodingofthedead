@@ -384,7 +384,7 @@ define(["creature"], function(creature){
                 var checkCaseSensitive = (ans.toLowerCase() === correctAnswer.toLowerCase());
 
                 if (checkCaseSensitive && !correct){
-                    focusedZombie.say("It is case sensitive! Type 'HelloWorld' again");
+                    focusedZombie.say("It's not correct. 'HelloWorld' is case sensitive!!!");
                 }
                 return correct;
             }

@@ -559,7 +559,7 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                                        // this question is tricky
                                        // player will need some help
                                       zombieWaitingForAnswer.showDialog();
-                                      zombieWaitingForAnswer.say('there is a semicolon at the end of [a,b]=[b,a];');
+                                      zombieWaitingForAnswer.say("Don't forget \nthe semicolon!");
                                       zombieWaitingForAnswer.dialogArea.y -= 100.0;
                                       zombieWaitingForAnswer.dialogArea.x += 20.0;
                                    }
