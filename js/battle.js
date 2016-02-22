@@ -58,6 +58,7 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
             var currentState; // 目前的劇情進展
 
             var shortQuizCollection; //Array<ShortQuiz>
+            var QuizIndex = 0;
             var isFirstZombie;
 
 
@@ -83,6 +84,7 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
 
             this.create = function(){
 
+                QuizIndex = 0;
                 zombieCount = 0;
                 isFirstZombie = true;
                 game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -99,6 +101,8 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                 shortQuizCollection.push(new ShortQuiz.ShortQuiz('Reverse string. <br/><br/><b>Hint: "string".split("").reverse().<span style="color: #F7FE2E">join</span>("");</b>', '"string".split("").reverse().__("");', 'join'));
                 shortQuizCollection.push(new ShortQuiz.ShortQuiz('Swap two variables a and b without the use of a temp. <br/><br/><b>Hint: <span style="color: #F7FE2E">[a,b]=[b,a];</span></b>', 'Swap two variables a and b \nwithout the use of a temp.', '[a,b]=[b,a];'));
                 shortQuizCollection.push(new ShortQuiz.ShortQuiz('Complete this one line function. <br/>function is_email(id){ return _______.test(id);} <br/><br/><b>Hint: function is_email(id){return (/^([\\w!.%+\\-\\*])+<span style="color: #F7FE2E">@</span>([\\w\\-])+(?:\\.[\\w\\-]+)+$/).test(id);}</b>', '(/^([\\w!.%+\\-\\*])+█([\\w\\-])+(?:\\.[\\w\\-]+)+$/)\n // replace █', '@'));
+
+                shortQuizCollection = shuffle(shortQuizCollection);
 
                 zombieGrrsArray.push(game.add.audio('zombieGrr1'));
                 zombieGrrsArray.push(game.add.audio('zombieGrr4'));
@@ -303,7 +307,16 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                 zombie.onAttackSignal.add(playerGetAttackByZombie, this);
                 // TODO 註冊zombieOnDeath 事件
 
-                zombie.setShortQuiz( shortQuizCollection[game.rnd.integerInRange(0, shortQuizCollection.length - 1)]);
+                if (!QuizIndex)
+                {
+                    QuizIndex = 0;
+                }
+
+                if (QuizIndex > shortQuizCollection.length - 1) {
+                    QuizIndex = 0;
+                }
+                zombie.setShortQuiz( shortQuizCollection[QuizIndex]);
+                QuizIndex += 1;
 
                 if(isDebug) {
                     console.log("live counting:" + zombieGroup.countLiving() + ", dead counting:" +zombieGroup.countDead());
@@ -560,6 +573,26 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                     vars[hash[0]] = hash[1];
                 }
                 return vars;
+            }
+
+            function shuffle(array) {
+                let counter = array.length;
+
+                // While there are elements in the array
+                while (counter > 0) {
+                    // Pick a random index
+                    let index = Math.floor(Math.random() * counter);
+
+                    // Decrease counter by 1
+                    counter--;
+
+                    // And swap the last element with it
+                    let temp = array[counter];
+                    array[counter] = array[index];
+                    array[index] = temp;
+                }
+
+                return array;
             }
 
             return this;
