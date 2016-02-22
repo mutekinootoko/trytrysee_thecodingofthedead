@@ -45,6 +45,8 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             // 讀取bluemix錯誤計數
             var bmerrorCount;
 
+            var hasSubmit = null;
+
             this.init = function () {
               if(arguments.length > 0) {
                 PLAYER_CURRENT_HEALTH = arguments[0]; // 前一個state傳過來的 player health
@@ -87,10 +89,17 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                 drawHealthBarsNoArg();
 
                 //characterRising(); // Lono: I hate waiting
-                //game.time.events.loop(Phaser.Timer.SECOND*0.3 , characterRising, this);
 
             };
 
+            function bossSaySomething(){
+                if (finalBoss
+                    && !hasSubmit
+                    && currentState == StateEnum.firstZombieBegin)
+                {
+                    finalBoss.say("Click 'RUN' at the bottom-right corner if you don't know what to do");
+                }
+            }
             this.update = function() {
                 characterRising();
             }
@@ -103,6 +112,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
               * check code in ace
               */
             function runEditorCode() {
+              hasSubmit = true;
 
               if(aceeditorObj.getValue() === 'yo') {
                 // cheat
@@ -273,6 +283,8 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
                     // first zombie
                     currentState = StateEnum.firstZombieBegin;
+                    game.time.events.loop(Phaser.Timer.SECOND*5.0 , bossSaySomething, this);
+
 
                     // 註冊zombieAttack事件（signal, just like NSNotificationCenter）
                     finalBoss.onAttackSignal.add(playerGetAttackByZombie, this);
@@ -295,6 +307,8 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
                     killAZombie(zombie);
                     finalBoss = null;
+                    currentState = StateEnum.firstZombieEnd;
+
 
                     // move to next Stage
                     //game.state.start('battle');
@@ -433,10 +447,10 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                             currentState = StateEnum.introductionEnd;
                         }
                     });
-                } else if (typingEnum == TypingEnum.answer) {
-                    if (!finalBoss) { return; }
+                } else if (typingEnum == TypingEnum.answer && StateEnum.firstZombieBegin) {
                     // typing mode on
                     game.input.keyboard.addCallbacks(this, null, null, function(char) {
+                            if (!finalBoss) { return; }
                             // don't forget ESC key down event is almost registed
                             // backspace key is prevented from browser capture at the top.
                             console.log('typing mode on and key pressed: ' + char + 'in ascii number:' + char.charCodeAt());
