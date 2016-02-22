@@ -34,7 +34,7 @@ Please set browser window size to **1027x768** or above for best experiences.
 
 ## Features
 ### Swarm of zombies
-![Zombies](https://cloud.githubusercontent.com/assets/4080524/13202693/57961f04-d8de-11e5-988e-09a7234173a7.jpg)
+![Zombies](https://cloud.githubusercontent.com/assets/4080524/13210572/aeaa18a8-d96b-11e5-845e-1ae07aab6ed4.jpg)
 
 ### The big bad Golem
 ![Boss](https://cloud.githubusercontent.com/assets/4080524/13202673/c305d6c2-d8dd-11e5-8b7d-ced3a8885358.jpg)
