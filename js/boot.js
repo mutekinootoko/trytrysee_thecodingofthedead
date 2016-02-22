@@ -71,6 +71,8 @@ define([], function(){
                 game.load.spritesheet('bossAttack', 'assets/bossSpriteSheet/bossAttack.png', 528, 372, 6);
                 game.load.spritesheet('bossDie', 'assets/bossSpriteSheet/bossDie.png', 456, 504, 7);
 
+                game.load.image('winBg', 'assets/winBg.jpg');
+
                 game.load.start();
             }
 

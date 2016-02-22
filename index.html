@@ -22,6 +22,7 @@
                 battle: 'js/battle',
                 boss: 'js/boss',
                 tutorial: 'js/tutorial',
+                victory: 'js/victory',
                 creature: 'js/creature',
                 Cookies: 'bower_components/js-cookie/src/js.cookie',
                 swal : 'bower_components/bootstrap-sweetalert/lib/sweet-alert.min',
@@ -34,8 +35,8 @@
             }
         });
 
-        require( ["boot", "battle", "boss", "tutorial", "creature", "ShortQuiz", "AceEditor"],
-            function(boot, battle, boss, tutorial, creature, ShortQuiz, AceEditor) {
+        require( ["boot", "battle", "boss", "tutorial", "creature", "ShortQuiz", "AceEditor", "victory"],
+            function(boot, battle, boss, tutorial, creature, ShortQuiz, AceEditor, victory) {
                 //This function will be called when all the dependencies
                 //listed above are loaded. Note that this function could
                 //be called before the page is loaded.
@@ -65,6 +66,7 @@
                 game.States.battle = battleObj;
 
                 game.States.tutorial = tutorial.tutorial(game);
+                game.States.victory = victory.victory(game, $('#bluemix-img'));
 
                 var editor = AceEditor.initAce();
 
@@ -84,6 +86,7 @@
                 game.state.add('battle', game.States.battle);
                 game.state.add('boss', game.States.boss);
                 game.state.add('tutorial', game.States.tutorial);
+                game.state.add('victory', game.States.victory);
                 game.state.start('boot');
 
 
@@ -93,7 +96,7 @@
 
        <div class="container">
          <div class="gameview">
-           <div class="bluemix-img">
+           <div id="bluemix-img" class="bluemix-img"  style="display:none;" >
              <a href="https://console.ng.bluemix.net/" target="_blank"> 
                <img src="assets/bluemix-logo.png" alt="IBM Bluemix" height="244" width="244">
              </a>

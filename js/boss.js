@@ -310,8 +310,9 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                     currentState = StateEnum.firstZombieEnd;
 
 
+
                     // move to next Stage
-                    //game.state.start('battle');
+                    game.state.start('victory');
 
                     // TODO game over
 
