@@ -157,7 +157,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                   if(bmerrorCount++ >= 2) {
                     game.time.events.add(Phaser.Timer.SECOND , function() {
                       finalBoss.say('Fine! I will let you pass!');
-                      game.time.events.add(Phaser.Timer.SECOND, function() {
+                      game.time.events.add(Phaser.Timer.SECOND*2, function() {
                         killBoss(finalBoss);
                       }, this);
                     }, this);
@@ -307,7 +307,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
 
                 zombie.zombie.loadTexture('bossDie', 0);
                 zombie.zombie.animations.add('die');
-                zombie.zombie.animations.play('die', 7, false);
+                zombie.zombie.animations.play('die', 3, false);
                 zombie.zombie.animations.currentAnim.onComplete.add(function() {
 
                     killAZombie(zombie);
