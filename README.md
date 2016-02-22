@@ -81,5 +81,8 @@ Alternatively, you can remove all code and type **yo** then hit RUN.
 * Explosion ([FreeSFX](http://www.freesfx.co.uk/soundeffects/fire_explosions/?p=2))
 * Gunshot ([FindSounds](http://www.findsounds.com/))
 
+### Background Music
+* QUIET TENSION by Eric Matyas ([soundimage.org](http://www.soundimage.org))
+
 ## License
 MIT for the code, and CC-BY for the art and music.
