@@ -86,7 +86,7 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                 zombieCount = 0;
                 isFirstZombie = true;
                 game.physics.startSystem(Phaser.Physics.ARCADE);
-                game.add.tileSprite(-250, -150, 1250, 950, 'gameBg');
+                game.add.tileSprite(0, 0, 800, 600, 'gameBg');
 
                 // world邊界設定的比camera大一點，可以做搖晃效果
                 game.world.setBounds(0, 0, game.world.width + 15, game.world.height);
