@@ -100,7 +100,7 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                 shortQuizCollection.push(new ShortQuiz.ShortQuiz('What will the code below output?<br/>console.log(0.1 + 0.2 == 0.3);<br/><br/><b>Hint: <span style="color: #F7FE2E">false</span></b>', 'console.log(0.1 + 0.2 == 0.3);', 'false'));
                 shortQuizCollection.push(new ShortQuiz.ShortQuiz('Reverse string. <br/><br/><b>Hint: "string".split("").reverse().<span style="color: #F7FE2E">join</span>("");</b>', '"string".split("").reverse().__("");', 'join'));
                 shortQuizCollection.push(new ShortQuiz.ShortQuiz('Swap two variables a and b without the use of a temp. <br/><br/><b>Hint: <span style="color: #F7FE2E">[a,b]=[b,a];</span></b>', 'Swap two variables a and b \nwithout the use of a temp.', '[a,b]=[b,a];'));
-                shortQuizCollection.push(new ShortQuiz.ShortQuiz('Complete this one line function. <br/>function is_email(id){ return _______.test(id);} <br/><br/><b>Hint: function is_email(id){return (/^([\\w!.%+\\-\\*])+<span style="color: #F7FE2E">@</span>([\\w\\-])+(?:\\.[\\w\\-]+)+$/).test(id);}</b>', '(/^([\\w!.%+\\-\\*])+█([\\w\\-])+(?:\\.[\\w\\-]+)+$/)\n // replace █', '@'));
+                //shortQuizCollection.push(new ShortQuiz.ShortQuiz('Complete this one line function. <br/>function is_email(id){ return _______.test(id);} <br/><br/><b>Hint: function is_email(id){return (/^([\\w!.%+\\-\\*])+<span style="color: #F7FE2E">@</span>([\\w\\-])+(?:\\.[\\w\\-]+)+$/).test(id);}</b>', '(/^([\\w!.%+\\-\\*])+█([\\w\\-])+(?:\\.[\\w\\-]+)+$/)\n // replace █', '@'));
 
                 shortQuizCollection = shuffle(shortQuizCollection);
 
