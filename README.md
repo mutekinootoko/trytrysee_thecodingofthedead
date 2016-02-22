@@ -3,6 +3,8 @@
 
 ## How to run
  [CLICK HERE TO RUN](http://169.44.56.42/trytrysee/index.html)
+ 
+ [backup link](http://169.45.223.200)
 
  If you are using Firefox browser, make sure you switch off **"Search for text when I start typing"** in preferences -> advance -> general to release keyboard events.
 
@@ -39,7 +41,7 @@ Please set browser window size to **1027x768** or above for best experiences.
 ### The big bad Golem
 ![Boss](https://cloud.githubusercontent.com/assets/4080524/13202673/c305d6c2-d8dd-11e5-8b7d-ced3a8885358.jpg)
 
-### The ultimate code judge system  Bluemix®
+### The ultimate code judge system hosted on Bluemix®
 ![Bluemix](https://cloud.githubusercontent.com/assets/4080524/13203382/c4fd64ae-d8f1-11e5-93dd-5df9a420c56f.jpg)
 
 ## Cheats
