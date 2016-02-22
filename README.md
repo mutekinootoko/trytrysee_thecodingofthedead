@@ -66,6 +66,8 @@ Alternatively, you can remove all code and type **yo** then hit RUN.
 ### Zombie Stages
 * Marku
 * Hai Feng
+* Max
+
 
 ### General Game Art
 * Max

@@ -151,7 +151,7 @@ define(["creature"], function(creature){
 
                     zombieGroup.bringToTop(zombie);
                     creature.zombieInit(game)(zombie);
-                    zombie.dialogs = ["Welcome to coding of dead （press any key）",
+                    zombie.dialogs = ["Welcome to coding of dead (press any key to continue)",
                                       "You are here to meet the great Bluemix® ?",
                                       "Then turn on your speakers for the best experience.",
                                       "Before you begin, I will test your coding power.",
@@ -380,7 +380,13 @@ define(["creature"], function(creature){
                 }
 
                 console.log('checking ans:' + ans);
-                return (ans === correctAnswer);
+                var correct = (ans === correctAnswer);
+                var checkCaseSensitive = (ans.toLowerCase() === correctAnswer.toLowerCase());
+
+                if (checkCaseSensitive && !correct){
+                    focusedZombie.say("It is case sensitive! Type 'HelloWorld' again");
+                }
+                return correct;
             }
 
             function clearZombieAnsTypeArea(zombieToClearAns) {
