@@ -60,6 +60,7 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
             var shortQuizCollection; //Array<ShortQuiz>
             var QuizIndex = 0;
             var isFirstZombie;
+            var onGoingKill = false;
 
 
             // prevent backspace(delete) capture by firefox or chrome to 'go back'
@@ -377,11 +378,18 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
 
             function killAZombieWithAnimation(zombieToKill) {
 
+              if (onGoingKill) {
+                  return;
+              }
+
+              onGoingKill = true;
+
               zombieToKill.zombie.loadTexture('zombieDie', 0);
               zombieToKill.zombie.animations.add('die');
               zombieToKill.zombie.animations.play('die', 8, false);
               zombieToKill.zombie.animations.currentAnim.onComplete.add(function() {
                   killAZombie(zombieToKill);
+                  onGoingKill = false;
               }, this);
             }
 
@@ -421,6 +429,10 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
             }
 
             function playerGetAttackByZombie(theZombieAttackingPlayer) {
+
+              if (onGoingKill){
+                  return;
+              }
               // 殭屍叫
               zombieGrrrrr(theZombieAttackingPlayer);
 
@@ -437,6 +449,9 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
             }
 
             function playerAttack(zombie) {
+                if (onGoingKill){
+                    return;
+                }
                 if (gunshot) {
                     gunshot.play();
                 }
@@ -454,6 +469,8 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
             }
 
             function attackedEffect(theZombieAttackingPlayer) {
+              if (onGoingKill) {return; } // otherwise, the zombies will never die
+
               theZombieAttackingPlayer.zombie.loadTexture('zombieIdle', 0);
               theZombieAttackingPlayer.zombie.animations.play('idle', 6, true);
               PLAYER_CURRENT_HEALTH -= ZOMBIE_HIT_POINT;
@@ -511,6 +528,7 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                     // typing mode on
                     game.input.keyboard.addCallbacks(this, null, null, function(char) {
                             if (!isAnyZombieWaitingForAnswer()) { return; }
+                            if (onGoingKill) {return; } // otherwise, the zombies will never die
                             // don't forget ESC key down event is almost registed
                             // backspace key is prevented from browser capture at the top.
                             console.log('typing mode on and key pressed: ' + char + 'in ascii number:' + char.charCodeAt());

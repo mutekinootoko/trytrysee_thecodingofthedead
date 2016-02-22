@@ -293,6 +293,11 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             }
 
             function killBoss(zombie) {
+                if (!finalBoss){
+                    return;
+                }
+                finalBoss = null;
+
                 if (explosionSound) {
                     explosionSound.play();
                 }
@@ -306,7 +311,6 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                 zombie.zombie.animations.currentAnim.onComplete.add(function() {
 
                     killAZombie(zombie);
-                    finalBoss = null;
                     currentState = StateEnum.firstZombieEnd;
 
 
@@ -338,6 +342,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             }
 
             function playerGetAttackByZombie(theZombieAttackingPlayer) {
+              if (!finalBoss) {return;}
 
               finalBoss.zombie.loadTexture('bossAttack', 0);
               finalBoss.zombie.animations.add('attack1', [0, 1, 2]);
@@ -352,6 +357,8 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             }
 
             function playerAttack(zombie) {
+
+                if (!zombie) {return;}
                 if (gunshot) {
                     gunshot.play();
                 }
@@ -399,6 +406,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
             }
 
             function attackedEffect(theZombieAttackingPlayer) {
+              if (!finalBoss) {return;}
               finalBoss.zombie.loadTexture('bossIdle', 0);
               finalBoss.zombie.animations.play('idle', 6, true);
               PLAYER_CURRENT_HEALTH -= 20;
