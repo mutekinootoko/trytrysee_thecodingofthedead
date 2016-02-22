@@ -30,14 +30,14 @@ var zombieFunc = function(zombie) {
     var dialogArea = game.make.text(0,
                                      -zombie.height*zombie.anchor.y + 0.3*zombie.height,
                                      "",
-                                     { font: "30px Arial",
+                                     { font: "22px Arial",
                                         fill: "#FFFFFF",
                                         wordWrap: true,
                                         align: "left",
                                         //backgroundColor: "#1C1C1C"
                                      });
     dialogArea.anchor.set(0.4, 1.0);
-    dialogArea.wordWrapWidth = 200.0;
+    dialogArea.wordWrapWidth = 300.0;
 
     var ansTextArea = game.make.text(0,
                                      0,
@@ -199,6 +199,13 @@ var zombieFunc = function(zombie) {
             var dialogArea = zombie.dialogArea;
             dialogArea.text = str;
             dialogArea.x = -dialogArea.width + 10;
+
+            // make sure the left edge of dialog doesn't go outside of the left screen
+            var dialogLeft = zombie.x + dialogArea.left;
+            if (dialogArea.left < 10.0) {
+                dialogArea.x += (10.0 - dialogLeft);
+                dialogArea.left = 30.0;
+            }
         }
     }
 

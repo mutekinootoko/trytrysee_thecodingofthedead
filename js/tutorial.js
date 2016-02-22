@@ -151,7 +151,7 @@ define(["creature"], function(creature){
 
                     zombieGroup.bringToTop(zombie);
                     creature.zombieInit(game)(zombie);
-                    zombie.dialogs = ["Welcome to coding of dead （press any key）",
+                    zombie.dialogs = ["Welcome to coding of dead (press any key to continue)",
                                       "You are here to meet the great Bluemix® ?",
                                       "Then turn on your speakers for the best experience.",
                                       "Before you begin, I will test your coding power.",
