@@ -61,6 +61,7 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
             var QuizIndex = 0;
             var isFirstZombie;
             var onGoingKill = false;
+            var isPlayerDead = false;
 
 
             // prevent backspace(delete) capture by firefox or chrome to 'go back'
@@ -474,6 +475,12 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
               theZombieAttackingPlayer.zombie.loadTexture('zombieIdle', 0);
               theZombieAttackingPlayer.zombie.animations.play('idle', 6, true);
               PLAYER_CURRENT_HEALTH -= ZOMBIE_HIT_POINT;
+
+              if (PLAYER_CURRENT_HEALTH <= 0){
+                  isPlayerDead = true;
+                  onGoingKill = true; // disable all animations
+              }
+
               drawHealthBarsNoArg();
               // 紅畫面，搖視角效果
               var bloodInTheFace = game.add.graphics(0,0);
@@ -497,6 +504,10 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                     game.time.events.add(Phaser.Timer.SECOND * 0.1, function() {
                       game.camera.x = 0;
                       bloodInTheFace.destroy();
+                      if (isPlayerDead) {
+                          game.States.mLastState = game.state.current;
+                          game.state.start('lose');
+                      }
                     }, this);
                   }, this);
                 }, this);

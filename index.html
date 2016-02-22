@@ -34,6 +34,7 @@
                 battle: 'js/battle',
                 boss: 'js/boss',
                 tutorial: 'js/tutorial',
+                lose: 'js/lose',
                 victory: 'js/victory',
                 creature: 'js/creature',
                 Cookies: 'bower_components/js-cookie/src/js.cookie',
@@ -47,8 +48,8 @@
             }
         });
 
-        require( ["boot", "battle", "boss", "tutorial", "creature", "ShortQuiz", "AceEditor", "victory"],
-            function(boot, battle, boss, tutorial, creature, ShortQuiz, AceEditor, victory) {
+        require( ["boot", "battle", "boss", "tutorial", "creature", "ShortQuiz", "AceEditor", "victory", "lose"],
+            function(boot, battle, boss, tutorial, creature, ShortQuiz, AceEditor, victory, lose) {
                 //This function will be called when all the dependencies
                 //listed above are loaded. Note that this function could
                 //be called before the page is loaded.
@@ -73,16 +74,15 @@
                 game.States = {}; //創建一個對象來存放要用到的state
 
                 //boot場景，用來做一些遊戲啟動前的準備
-                game.States.boot = boot.boot(game);
-                var battleObj = new battle.battle(game, $('#question-text'))();
-                game.States.battle = battleObj;
-
-                game.States.tutorial = tutorial.tutorial(game);
-                game.States.victory = victory.victory(game, $('#bluemix-img'));
-
-                var editor = AceEditor.initAce();
-
-                game.States.boss = boss.boss(game, $('#bossAnswer'), editor, $('#question-text'), $('#bossAnswerSubmitButton'));
+                game.States.boot     = function () { return boot.boot(game);}
+                game.States.battle   = function () { return battle.battle(game, $('#question-text'));}
+                game.States.tutorial = function () { return tutorial.tutorial(game);}
+                game.States.victory  = function () { return victory.victory(game, $('#bluemix-img'));}
+                game.States.lose     = function () { return lose.lose(game);}
+                game.States.boss     = function () {
+                    var editor = AceEditor.initAce();
+                    return boss.boss(game, $('#bossAnswer'), editor, $('#question-text'), $('#bossAnswerSubmitButton'));
+                }
 
                 $(document).on("keydown", function (e) {
                     var state = game.state.getCurrentState();
@@ -94,11 +94,12 @@
 
 
                 //把定義好的場景添加到遊戲中
-                game.state.add('boot', game.States.boot);
-                game.state.add('battle', game.States.battle);
-                game.state.add('boss', game.States.boss);
-                game.state.add('tutorial', game.States.tutorial);
-                game.state.add('victory', game.States.victory);
+                game.state.add('boot', game.States.boot());
+                game.state.add('battle', game.States.battle());
+                game.state.add('boss', game.States.boss());
+                game.state.add('tutorial', game.States.tutorial());
+                game.state.add('victory', game.States.victory());
+                game.state.add('lose', game.States.lose());
                 game.state.start('boot');
 
 
