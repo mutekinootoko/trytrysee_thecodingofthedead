@@ -548,11 +548,21 @@ define(["creature", "ShortQuiz"], function(creature, ShortQuiz){
                                 case 13:
                                     // enter key
                                     // 比較時抽掉空格 作弊的比較方式  eg: substring(0, 11) 跟 substring(0,11)
-                                if(checkAnswer(zombieWaitingForAnswer, zombieWaitingForAnswer.ansTypeArea.text.replace(' ', ''), zombieWaitingForAnswer.getShortQuizAnswer().replace(' ', ''))) {
+                                var playerAnswer = zombieWaitingForAnswer.ansTypeArea.text.replace(' ', '');
+                                var correctAnswer = zombieWaitingForAnswer.getShortQuizAnswer().replace(' ', '');
+                                if(checkAnswer(zombieWaitingForAnswer, playerAnswer, correctAnswer)) {
                                   playerAttack(zombieWaitingForAnswer);
                                   // zombie die!
                                   killAZombieWithAnimation(zombieWaitingForAnswer);
                                 } else {
+                                   if(checkAnswer(zombieWaitingForAnswer, playerAnswer, '[a,b]=[b,a]')) {
+                                       // this question is tricky
+                                       // player will need some help
+                                      zombieWaitingForAnswer.showDialog();
+                                      zombieWaitingForAnswer.say('there is a semicolon at the end of [a,b]=[b,a];');
+                                      zombieWaitingForAnswer.dialogArea.y -= 100.0;
+                                      zombieWaitingForAnswer.dialogArea.x += 20.0;
+                                   }
                                   // player damaged
                                   clearZombieAnsTypeArea(zombieWaitingForAnswer);
                                   if(zombieWaitingForAnswer.isAbleToEsc === false) {
