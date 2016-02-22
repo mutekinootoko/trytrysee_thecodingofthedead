@@ -380,7 +380,13 @@ define(["creature"], function(creature){
                 }
 
                 console.log('checking ans:' + ans);
-                return (ans === correctAnswer);
+                var correct = (ans === correctAnswer);
+                var checkCaseSensitive = (ans.toLowerCase() === correctAnswer.toLowerCase());
+
+                if (checkCaseSensitive && !correct){
+                    focusedZombie.say("It is case sensitive! Type 'HelloWorld' again");
+                }
+                return correct;
             }
 
             function clearZombieAnsTypeArea(zombieToClearAns) {
