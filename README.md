@@ -2,11 +2,14 @@
 ![Splash](https://cloud.githubusercontent.com/assets/4080524/13202495/bbe2b4ba-d8d7-11e5-9df3-96a0a3e96740.jpg)
 
 ## How to run
- [CLICK HERE TO RUN](http://169.44.56.150/trytrysee/index.html)
+<s> [CLICK HERE TO RUN](http://169.44.56.150/trytrysee/index.html)</s>
 
- [backup link](http://169.45.223.200)
+ [CLICK HERE TO RUN](http://haifengkao.github.io/coding-of-dead/) - ported to github.io
  
- [backup link2](http://169.44.56.42/trytrysee/index.html)
+
+<s> [backup link](http://169.45.223.200) </s>
+ 
+<s> [backup link2](http://169.44.56.42/trytrysee/index.html) </s>
 
  If you are using Firefox browser, make sure you switch off **"Search for text when I start typing"** in preferences -> advance -> general to release keyboard events.
 
