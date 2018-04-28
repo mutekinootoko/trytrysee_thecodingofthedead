@@ -153,6 +153,11 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
               finalBoss.say('Nice! Checking your code with the holy Bluemix ...');
               console.log('before sending to Bluemix runcode:' + runcode);
 
+              // no more bluemix server, just win anyway.
+              finalBoss.say('aaaah~ Bluemix the Holy one, save me~~');
+              killBoss(finalBoss);
+
+              /*
               $.ajax({
                 type: "POST",
                 url: BLUEMIX_JS_SANDBOX_SERVER_URL,
@@ -198,6 +203,7 @@ define(["creature", "CodeQuestionbase"], function(creature, CodeQuestionbase){
                   playerGetAttackByZombie(finalBoss);
                 }
               });
+              */
             }
 
             function characterRising() {
