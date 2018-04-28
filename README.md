@@ -4,7 +4,7 @@
 ## How to run
 <s> [CLICK HERE TO RUN](http://169.44.56.150/trytrysee/index.html)</s>
 
- [CLICK HERE TO RUN](http://mutekinootoko.github.io/trytrysee_thecodingofthedead/) - ported to github.io
+ [CLICK HERE TO RUN](http://mutekinootoko.github.io/trytrysee_thecodingofthedead/) - ported to github.io (no longer connect with Bluemix®)
  
 
 <s> [backup link](http://169.45.223.200) </s>
